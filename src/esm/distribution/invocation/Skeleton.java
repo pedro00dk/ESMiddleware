@@ -60,8 +60,10 @@ public abstract class Skeleton {
         Objects.requireNonNull(methodInvocation, "The method invocation can not be null.");
         Object executionInstance = this;
         if (methodInvocation.isRequireIndependentInstance()) {
-            Object[] instanceGetterMethodArguments = new Object[methodInvocation.getMethodArguments().length];
-            Class[] instanceGetterMethodArgumentTypes = new Class[methodInvocation.getMethodArguments().length];
+            Object[] instanceGetterMethodArguments
+                    = new Object[methodInvocation.getInstanceGetterMethodArguments().length];
+            Class[] instanceGetterMethodArgumentTypes
+                    = new Class[methodInvocation.getInstanceGetterMethodArguments().length];
             for (int i = 0; i < instanceGetterMethodArguments.length; i++) {
                 instanceGetterMethodArguments[i] = methodInvocation.getInstanceGetterMethodArguments()[i].getE1();
                 instanceGetterMethodArgumentTypes[i] = methodInvocation.getInstanceGetterMethodArguments()[i].getE2();
@@ -70,8 +72,15 @@ public abstract class Skeleton {
                 Method instanceGetterMethod = getClass().getDeclaredMethod(
                         methodInvocation.getInstanceGetterMethodName(), instanceGetterMethodArgumentTypes
                 );
-            } catch (NoSuchMethodException e) {
+                executionInstance = instanceGetterMethod.invoke(this, instanceGetterMethodArguments);
+            } catch (NoSuchMethodException | IllegalAccessException
+
+
+
+                    e) {
                 return new MethodResult(methodInvocation.getMethodName(), null, e);
+            } catch (InvocationTargetException e) {
+                return new MethodResult(methodInvocation.getMethodName(), null, e.getCause());
             }
         }
         Object[] methodArguments = new Object[methodInvocation.getMethodArguments().length];
@@ -83,7 +92,10 @@ public abstract class Skeleton {
         try {
             Method method = getClass()
                     .getDeclaredMethod(methodInvocation.getMethodName(), methodArgumentTypes);
-            Tuple<Object, Class> result = new Tuple<>(method.invoke(this, methodArguments), method.getReturnType());
+            Tuple<Object, Class> result = new Tuple<>(
+                    method.invoke(executionInstance, methodArguments),
+                    method.getReturnType()
+            );
             if (methodInvocation.isExpectResult()) {
                 return new MethodResult(methodInvocation.getMethodName(), result, null);
             } else {
