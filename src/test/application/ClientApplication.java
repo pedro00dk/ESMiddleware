@@ -1,7 +1,7 @@
 package test.application;
 
 import esm.common.RegistryProxy;
-import test.application.calculator.Calculator;
+import test.application.requestCalculator.RequestCalculator;
 
 import java.util.Random;
 
@@ -15,8 +15,8 @@ public class ClientApplication {
         System.out.println("Creating a registry proxy with the Registry AOR");
         RegistryProxy registryProxy = new RegistryProxy(RegistryApplication.REGISTRY_ABSOLUTE_OBJECT_REFERENCE);
 
-        System.out.println("Searching in the registry for Calculator services");
-        Calculator calculator = (Calculator) registryProxy.lookup("Calculator");
+        System.out.println("Searching in the registry for RequestCalculator services");
+        RequestCalculator requestCalculator = (RequestCalculator) registryProxy.lookup("RequestCalculator");
 
         // Application (sum aleatory values)
 
@@ -32,8 +32,8 @@ public class ClientApplication {
         for (int i = 0; i < numberOfOperations; i++) {
             int randomValue1 = prng.nextInt();
             int randomValue2 = prng.nextInt();
-            calculator.setMem(calculator.sum(randomValue1, randomValue2));
-            int result = calculator.getMem();
+            requestCalculator.setMem(requestCalculator.sum(randomValue1, randomValue2));
+            int result = requestCalculator.getMem();
             if (showResult) {
                 System.out.println("Sum of " + randomValue1 + " and " + randomValue2 + " = " + result);
             }

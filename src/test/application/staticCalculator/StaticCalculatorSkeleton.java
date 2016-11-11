@@ -1,4 +1,4 @@
-package test.application.calculator;
+package test.application.staticCalculator;
 
 import esm.distribution.invocation.Skeleton;
 import esm.distribution.invocation.AbsoluteObjectReference;
@@ -6,11 +6,11 @@ import esm.distribution.invocation.AbsoluteObjectReference;
 /**
  * @author Pedro Henrique
  */
-public class CalculatorSkeleton extends Skeleton implements Calculator {
+public class StaticCalculatorSkeleton extends Skeleton implements StaticCalculator {
 
     private int memory;
 
-    public CalculatorSkeleton(AbsoluteObjectReference absoluteObjectReference) {
+    public StaticCalculatorSkeleton(AbsoluteObjectReference absoluteObjectReference) {
         super(absoluteObjectReference);
         memory = 0;
     }

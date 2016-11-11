@@ -1,4 +1,4 @@
-package test.application.calculator;
+package test.application.staticCalculator;
 
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.invocation.Proxy;
@@ -7,9 +7,9 @@ import esm.util.Tuple;
 /**
  * @author Pedro Henrique
  */
-public class CalculatorProxy extends Proxy implements Calculator {
+public class StaticCalculatorProxy extends Proxy implements StaticCalculator {
 
-    public CalculatorProxy(AbsoluteObjectReference absoluteObjectReference) {
+    public StaticCalculatorProxy(AbsoluteObjectReference absoluteObjectReference) {
         super(absoluteObjectReference);
     }
 

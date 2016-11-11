@@ -3,8 +3,10 @@ package test.application;
 import esm.common.RegistryProxy;
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.management.Invoker;
-import test.application.calculator.CalculatorProxy;
-import test.application.calculator.CalculatorSkeleton;
+import test.application.requestCalculator.RequestCalculatorProxy;
+import test.application.requestCalculator.RequestCalculatorSkeleton;
+import test.application.staticCalculator.StaticCalculatorProxy;
+import test.application.staticCalculator.StaticCalculatorSkeleton;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -26,18 +28,18 @@ public class ServerApplication {
     }
 
     public static void main(String[] args) {
-        System.out.println("Creating the Calculator Skeleton and Proxy");
-        CalculatorSkeleton calculatorSkeleton = new CalculatorSkeleton(CALCULATOR_ABSOLUTE_OBJECT_REFERENCE);
-        CalculatorProxy calculatorProxy = new CalculatorProxy(CALCULATOR_ABSOLUTE_OBJECT_REFERENCE);
+        System.out.println("Creating the RequestCalculator Skeleton and Proxy");
+        RequestCalculatorSkeleton calculatorSkeleton = new RequestCalculatorSkeleton(CALCULATOR_ABSOLUTE_OBJECT_REFERENCE);
+        RequestCalculatorProxy calculatorProxy = new RequestCalculatorProxy(CALCULATOR_ABSOLUTE_OBJECT_REFERENCE);
 
-        System.out.println("Binding the Calculator skeleton in the Invoker");
+        System.out.println("Binding the RequestCalculator skeleton in the Invoker");
         Invoker invoker = Invoker.getInstance();
         invoker.bind(calculatorSkeleton);
 
         System.out.println("Starting the Invoker co-routines");
         invoker.start();
 
-        System.out.println("Binding the Calculator proxy in the Registry");
+        System.out.println("Binding the RequestCalculator proxy in the Registry");
         RegistryProxy registryProxy = new RegistryProxy(RegistryApplication.REGISTRY_ABSOLUTE_OBJECT_REFERENCE);
         registryProxy.bind(calculatorProxy);
 
@@ -50,6 +52,6 @@ public class ServerApplication {
             registryProxy.unbind(calculatorProxy);
             Invoker.getInstance().stop();
         }
-        System.out.println("Calculator proxy unbound from the Registry and Invoker stopped, closing application");
+        System.out.println("RequestCalculator proxy unbound from the Registry and Invoker stopped, closing application");
     }
 }

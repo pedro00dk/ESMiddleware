@@ -1,14 +1,14 @@
-package test.application.calculator;
+package test.application.staticCalculator;
 
 import esm.distribution.instance.StaticRemoteObject;
 
 /**
  * @author Pedro Henrique
  */
-public interface Calculator extends StaticRemoteObject {
+public interface StaticCalculator extends StaticRemoteObject {
 
     default String getIdentifier() {
-        return "Calculator";
+        return "StaticCalculator";
     }
 
     Integer getMem();
