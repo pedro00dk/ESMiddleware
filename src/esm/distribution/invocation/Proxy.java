@@ -49,16 +49,30 @@ public abstract class Proxy implements Serializable {
      * invocation is null, in the second case, the {@link Throwable}s will be ignored too. If the remote method
      * (not the middleware) throws a {@link Throwable} this method will throws too with the same message and the
      * received result will be null (the tuple).
+     * The remote invocation can be done in a secondary remote object accessible by the primary remote object using the
+     * instanceGetterMethodName and instanceGetterMethodArguments.
+     * The void methods can expect result, it ensure the method execution and eventual exception throws can be get
+     * using expect result.
      *
-     * @param methodName      the method name, can not be null
-     * @param expectResult    if expect a result
-     * @param methodArguments the method arguments, can not be null but or contains null class elements, the class
-     *                        element should be the expected type of the method parameter.
+     * @param methodName                    the method name, can not be null
+     * @param methodArguments               the method arguments, can not be null or contains null class elements,
+     *                                      the class element should be of the type of the equivalent remote method
+     *                                      parameter
+     * @param requireIndependentInstance    if the method should be called in a secondary object
+     * @param instanceGetterMethodName      the method name to access the secondary object from the primary object, can
+     *                                      not be null if requireIndependentInstance is true
+     * @param instanceGetterMethodArguments the instance getter method name arguments, has the same conditions of the
+     *                                      methodArguments argument, can not be null if requireIndependentInstance is
+     *                                      true
+     * @param expectResult                  if expect result
      * @return the method result
      */
-    protected final Object invokeRemotely(String methodName, boolean expectResult,
-                                          Tuple<Object, Class>[] methodArguments) throws Throwable {
-        MethodInvocation methodInvocation = new MethodInvocation(methodName, expectResult, methodArguments,
+    protected final Object invokeRemotely(String methodName, Tuple<Object, Class>[] methodArguments,
+                                          boolean requireIndependentInstance, String instanceGetterMethodName,
+                                          Tuple<Object, Class>[] instanceGetterMethodArguments,
+                                          boolean expectResult) throws Throwable {
+        MethodInvocation methodInvocation = new MethodInvocation(methodName, methodArguments,
+                requireIndependentInstance, instanceGetterMethodName, instanceGetterMethodArguments, expectResult,
                 absoluteObjectReference);
         Requestor requestor = new Requestor();
         MethodResult methodResult = requestor.sendRemoteMethodInvocation(methodInvocation);

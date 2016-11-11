@@ -1,6 +1,7 @@
 package esm.common;
 
 import esm.distribution.instance.RemoteObject;
+import esm.distribution.instance.StaticRemoteObject;
 import esm.distribution.invocation.AbsoluteObjectReference;
 
 import java.util.NoSuchElementException;
@@ -12,7 +13,7 @@ import java.util.NoSuchElementException;
  *
  * @author Pedro Henrique
  */
-public interface Registry extends RemoteObject {
+public interface Registry extends StaticRemoteObject {
 
     @Override
     default String getIdentifier() {

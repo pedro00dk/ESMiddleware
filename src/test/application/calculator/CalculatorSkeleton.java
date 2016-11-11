@@ -16,37 +16,37 @@ public class CalculatorSkeleton extends Skeleton implements Calculator {
     }
 
     @Override
-    public Integer getMem() {
+    public synchronized Integer getMem() {
         return memory;
     }
 
     @Override
-    public void setMem(Integer a) {
+    public synchronized void setMem(Integer a) {
         memory = a;
     }
 
     @Override
-    public Integer sum(Integer a, Integer b) {
+    public synchronized Integer sum(Integer a, Integer b) {
         return a + b;
     }
 
     @Override
-    public Integer sub(Integer a, Integer b) {
+    public synchronized Integer sub(Integer a, Integer b) {
         return a - b;
     }
 
     @Override
-    public Integer mul(Integer a, Integer b) {
+    public synchronized Integer mul(Integer a, Integer b) {
         return a * b;
     }
 
     @Override
-    public Integer div(Integer a, Integer b) {
+    public synchronized Integer div(Integer a, Integer b) {
         return a / b;
     }
 
     @Override
-    public Integer mod(Integer a, Integer b) {
+    public synchronized Integer mod(Integer a, Integer b) {
         return a % b;
     }
 

@@ -1,9 +1,9 @@
 package esm.common;
 
 import esm.distribution.instance.RemoteObject;
+import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.invocation.Proxy;
 import esm.distribution.invocation.Skeleton;
-import esm.distribution.invocation.AbsoluteObjectReference;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -34,7 +34,7 @@ public final class RegistrySkeleton extends Skeleton implements Registry {
     }
 
     @Override
-    public void bind(RemoteObject remoteObject) throws IllegalArgumentException {
+    public synchronized void bind(RemoteObject remoteObject) throws IllegalArgumentException {
         Objects.requireNonNull(remoteObject, "The remote object can not be null.");
         if (!(remoteObject instanceof Proxy)) {
             throw new IllegalArgumentException("The remote object should extends Proxy.");
@@ -45,7 +45,7 @@ public final class RegistrySkeleton extends Skeleton implements Registry {
     }
 
     @Override
-    public void rebind(RemoteObject remoteObject) throws IllegalArgumentException {
+    public synchronized void rebind(RemoteObject remoteObject) throws IllegalArgumentException {
         Objects.requireNonNull(remoteObject, "The remote object can not be null.");
         if (!(remoteObject instanceof Proxy)) {
             throw new IllegalArgumentException("The remote object should extends Proxy.");
@@ -61,7 +61,7 @@ public final class RegistrySkeleton extends Skeleton implements Registry {
     }
 
     @Override
-    public void unbind(RemoteObject remoteObject) throws IllegalArgumentException {
+    public synchronized void unbind(RemoteObject remoteObject) throws IllegalArgumentException {
         Objects.requireNonNull(remoteObject, "The remote object can not be null.");
         if (!(remoteObject instanceof Proxy)) {
             throw new IllegalArgumentException("The remote object should extends Proxy.");
@@ -76,7 +76,7 @@ public final class RegistrySkeleton extends Skeleton implements Registry {
     }
 
     @Override
-    public RemoteObject lookup(String remoteObjectIdentifier)
+    public synchronized RemoteObject lookup(String remoteObjectIdentifier)
             throws NoSuchElementException {
         Objects.requireNonNull(remoteObjectIdentifier, "The remote object identifier can not be null.");
         RemoteObject boundRemoteObject = null;
@@ -94,7 +94,7 @@ public final class RegistrySkeleton extends Skeleton implements Registry {
     }
 
     @Override
-    public RemoteObject[] list() {
+    public synchronized RemoteObject[] list() {
         return boundRemoteObjects.values().toArray(new RemoteObject[]{});
     }
 }

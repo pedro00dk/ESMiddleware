@@ -1,7 +1,7 @@
 package test.application.calculator;
 
-import esm.distribution.invocation.Proxy;
 import esm.distribution.invocation.AbsoluteObjectReference;
+import esm.distribution.invocation.Proxy;
 import esm.util.Tuple;
 
 /**
@@ -17,8 +17,10 @@ public class CalculatorProxy extends Proxy implements Calculator {
     @SuppressWarnings("unchecked")
     public Integer getMem() {
         try {
-            return (Integer) invokeRemotely("getMem", true,
-                    new Tuple[]{}
+            return (Integer) invokeRemotely(
+                    "getMem", new Tuple[]{},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -31,8 +33,10 @@ public class CalculatorProxy extends Proxy implements Calculator {
     @SuppressWarnings("unchecked")
     public void setMem(Integer a) {
         try {
-            invokeRemotely("setMem", true,
-                    new Tuple[]{new Tuple<>(a, Integer.class)}
+            invokeRemotely(
+                    "setMem", new Tuple[]{new Tuple<>(a, Integer.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -43,8 +47,10 @@ public class CalculatorProxy extends Proxy implements Calculator {
     @SuppressWarnings("unchecked")
     public Integer sum(Integer a, Integer b) {
         try {
-            return (Integer) invokeRemotely("sum", true,
-                    new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)}
+            return (Integer) invokeRemotely(
+                    "sum", new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -56,8 +62,10 @@ public class CalculatorProxy extends Proxy implements Calculator {
     @SuppressWarnings("unchecked")
     public Integer sub(Integer a, Integer b) {
         try {
-            return (Integer) invokeRemotely("sub", true,
-                    new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)}
+            return (Integer) invokeRemotely(
+                    "sub", new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -69,8 +77,10 @@ public class CalculatorProxy extends Proxy implements Calculator {
     @SuppressWarnings("unchecked")
     public Integer mul(Integer a, Integer b) {
         try {
-            return (Integer) invokeRemotely("mul", true,
-                    new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)}
+            return (Integer) invokeRemotely(
+                    "mul", new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -82,8 +92,10 @@ public class CalculatorProxy extends Proxy implements Calculator {
     @SuppressWarnings("unchecked")
     public Integer div(Integer a, Integer b) {
         try {
-            return (Integer) invokeRemotely("div", true,
-                    new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)}
+            return (Integer) invokeRemotely(
+                    "div", new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -95,8 +107,10 @@ public class CalculatorProxy extends Proxy implements Calculator {
     @SuppressWarnings("unchecked")
     public Integer mod(Integer a, Integer b) {
         try {
-            return (Integer) invokeRemotely("mod", true,
-                    new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)}
+            return (Integer) invokeRemotely(
+                    "mod", new Tuple[]{new Tuple(a, Integer.class), new Tuple(b, Integer.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -108,8 +122,10 @@ public class CalculatorProxy extends Proxy implements Calculator {
     @SuppressWarnings("unchecked")
     public void exception() throws UnsupportedOperationException {
         try {
-            invokeRemotely("exception", true,
-                    new Tuple[]{}
+            invokeRemotely(
+                    "exception", new Tuple[]{},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             if (throwable instanceof UnsupportedOperationException) {

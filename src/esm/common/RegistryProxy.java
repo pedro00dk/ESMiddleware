@@ -28,8 +28,10 @@ public final class RegistryProxy extends Proxy implements Registry {
     @SuppressWarnings("unchecked")
     public void bind(RemoteObject remoteObject) throws IllegalArgumentException {
         try {
-            invokeRemotely("bind", true,
-                    new Tuple[]{new Tuple<>(remoteObject, RemoteObject.class)}
+            invokeRemotely(
+                    "bind", new Tuple[]{new Tuple<>(remoteObject, RemoteObject.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             if (throwable instanceof IllegalArgumentException) {
@@ -43,8 +45,10 @@ public final class RegistryProxy extends Proxy implements Registry {
     @SuppressWarnings("unchecked")
     public void rebind(RemoteObject remoteObject) throws IllegalArgumentException {
         try {
-            invokeRemotely("rebind", true,
-                    new Tuple[]{new Tuple<>(remoteObject, RemoteObject.class)}
+            invokeRemotely(
+                    "rebind", new Tuple[]{new Tuple<>(remoteObject, RemoteObject.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             if (throwable instanceof IllegalArgumentException) {
@@ -58,8 +62,10 @@ public final class RegistryProxy extends Proxy implements Registry {
     @SuppressWarnings("unchecked")
     public void unbind(RemoteObject remoteObject) throws IllegalArgumentException {
         try {
-            invokeRemotely("unbind", true,
-                    new Tuple[]{new Tuple<>(remoteObject, RemoteObject.class)}
+            invokeRemotely(
+                    "unbind", new Tuple[]{new Tuple<>(remoteObject, RemoteObject.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             if (throwable instanceof IllegalArgumentException) {
@@ -73,8 +79,10 @@ public final class RegistryProxy extends Proxy implements Registry {
     @SuppressWarnings("unchecked")
     public RemoteObject lookup(String remoteObjectIdentifier) throws NoSuchElementException {
         try {
-            return (RemoteObject) invokeRemotely("lookup", true,
-                    new Tuple[]{new Tuple<>(remoteObjectIdentifier, String.class)}
+            return (RemoteObject) invokeRemotely(
+                    "lookup", new Tuple[]{new Tuple<>(remoteObjectIdentifier, String.class)},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             if (throwable instanceof IllegalArgumentException) {
@@ -89,8 +97,10 @@ public final class RegistryProxy extends Proxy implements Registry {
     @SuppressWarnings("unchecked")
     public RemoteObject[] list() {
         try {
-            return (RemoteObject[]) invokeRemotely("list", true,
-                    new Tuple[]{}
+            return (RemoteObject[]) invokeRemotely(
+                    "list", new Tuple[]{},
+                    false, null, null,
+                    true
             );
         } catch (Throwable throwable) {
             throwable.printStackTrace();
