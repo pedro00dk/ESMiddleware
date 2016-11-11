@@ -1,6 +1,6 @@
 package esm.common;
 
-import esm.distribution.instance.DistributedObject;
+import esm.distribution.instance.RemoteObject;
 import esm.distribution.invocation.Proxy;
 import esm.distribution.invocation.Skeleton;
 import esm.distribution.invocation.AbsoluteObjectReference;
@@ -11,90 +11,90 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
- * The Registry {@link Skeleton} implementation, contains methods to bind, unbind and get {@link DistributedObject}s.
+ * The Registry {@link Skeleton} implementation, contains methods to bind, unbind and get {@link RemoteObject}s.
  *
  * @author Pedro Henrique
  */
 public final class RegistrySkeleton extends Skeleton implements Registry {
 
     /**
-     * The list with bound distributed objects.
+     * The list with bound remote objects.
      */
-    private Map<AbsoluteObjectReference, DistributedObject> boundDistributedObjects;
+    private Map<AbsoluteObjectReference, RemoteObject> boundRemoteObjects;
 
     /**
-     * As the other distributed objects, the registry needs an {@link AbsoluteObjectReference} with the address of this
+     * As the other remote objects, the registry needs an {@link AbsoluteObjectReference} with the address of this
      * object.
      *
      * @param absoluteObjectReference the registry absolute object reference
      */
     public RegistrySkeleton(AbsoluteObjectReference absoluteObjectReference) {
         super(absoluteObjectReference);
-        boundDistributedObjects = new Hashtable<>();
+        boundRemoteObjects = new Hashtable<>();
     }
 
     @Override
-    public void bind(DistributedObject distributedObject) throws IllegalArgumentException {
-        Objects.requireNonNull(distributedObject, "The distributed object can not be null.");
-        if (!(distributedObject instanceof Proxy)) {
-            throw new IllegalArgumentException("The distributed object should extends Proxy.");
-        } else if (boundDistributedObjects.containsKey(distributedObject.getAbsoluteObjectReference())) {
-            throw new IllegalArgumentException("A distributed object with the same absolute reference.");
+    public void bind(RemoteObject remoteObject) throws IllegalArgumentException {
+        Objects.requireNonNull(remoteObject, "The remote object can not be null.");
+        if (!(remoteObject instanceof Proxy)) {
+            throw new IllegalArgumentException("The remote object should extends Proxy.");
+        } else if (boundRemoteObjects.containsKey(remoteObject.getAbsoluteObjectReference())) {
+            throw new IllegalArgumentException("A remote object with the same absolute reference.");
         }
-        boundDistributedObjects.put(distributedObject.getAbsoluteObjectReference(), distributedObject);
+        boundRemoteObjects.put(remoteObject.getAbsoluteObjectReference(), remoteObject);
     }
 
     @Override
-    public void rebind(DistributedObject distributedObject) throws IllegalArgumentException {
-        Objects.requireNonNull(distributedObject, "The distributed object can not be null.");
-        if (!(distributedObject instanceof Proxy)) {
-            throw new IllegalArgumentException("The distributed object should extends Proxy.");
+    public void rebind(RemoteObject remoteObject) throws IllegalArgumentException {
+        Objects.requireNonNull(remoteObject, "The remote object can not be null.");
+        if (!(remoteObject instanceof Proxy)) {
+            throw new IllegalArgumentException("The remote object should extends Proxy.");
         }
-        DistributedObject boundDistributedObject
-                = boundDistributedObjects.get(distributedObject.getAbsoluteObjectReference());
-        if (boundDistributedObject != null
-                && !boundDistributedObject.getIdentifier().equals(distributedObject.getIdentifier())) {
-            throw new IllegalArgumentException("The current bound distributed object has different type than the" +
-                    "received distributed object type.");
+        RemoteObject boundRemoteObject
+                = boundRemoteObjects.get(remoteObject.getAbsoluteObjectReference());
+        if (boundRemoteObject != null
+                && !boundRemoteObject.getIdentifier().equals(remoteObject.getIdentifier())) {
+            throw new IllegalArgumentException("The current bound remote object has different type than the received " +
+                    "remote object type.");
         }
-        boundDistributedObjects.put(distributedObject.getAbsoluteObjectReference(), distributedObject);
+        boundRemoteObjects.put(remoteObject.getAbsoluteObjectReference(), remoteObject);
     }
 
     @Override
-    public void unbind(DistributedObject distributedObject) throws IllegalArgumentException {
-        Objects.requireNonNull(distributedObject, "The distributed object can not be null.");
-        if (!(distributedObject instanceof Proxy)) {
-            throw new IllegalArgumentException("The distributed object should extends Proxy.");
+    public void unbind(RemoteObject remoteObject) throws IllegalArgumentException {
+        Objects.requireNonNull(remoteObject, "The remote object can not be null.");
+        if (!(remoteObject instanceof Proxy)) {
+            throw new IllegalArgumentException("The remote object should extends Proxy.");
         }
-        DistributedObject boundDistributedObjectToRemove
-                = boundDistributedObjects.get(distributedObject.getAbsoluteObjectReference());
-        if (boundDistributedObjectToRemove != null) {
-            boundDistributedObjects.remove(boundDistributedObjectToRemove.getAbsoluteObjectReference());
+        RemoteObject boundRemoteObjectToRemove
+                = boundRemoteObjects.get(remoteObject.getAbsoluteObjectReference());
+        if (boundRemoteObjectToRemove != null) {
+            boundRemoteObjects.remove(boundRemoteObjectToRemove.getAbsoluteObjectReference());
         } else {
-            throw new NoSuchElementException("The distributed object was not found.");
+            throw new NoSuchElementException("The remote object was not found.");
         }
     }
 
     @Override
-    public DistributedObject lookup(String distributedObjectIdentifier)
+    public RemoteObject lookup(String remoteObjectIdentifier)
             throws NoSuchElementException {
-        Objects.requireNonNull(distributedObjectIdentifier, "The distributed object identifier can not be null.");
-        DistributedObject boundDistributedObject = null;
-        for (DistributedObject distributedObject : boundDistributedObjects.values()) {
-            if (distributedObject.getIdentifier().equals(distributedObjectIdentifier)) {
-                boundDistributedObject = distributedObject;
+        Objects.requireNonNull(remoteObjectIdentifier, "The remote object identifier can not be null.");
+        RemoteObject boundRemoteObject = null;
+        for (RemoteObject remoteObject : boundRemoteObjects.values()) {
+            if (remoteObject.getIdentifier().equals(remoteObjectIdentifier)) {
+                boundRemoteObject = remoteObject;
                 break;
             }
         }
-        if (boundDistributedObject != null) {
-            return boundDistributedObject;
+        if (boundRemoteObject != null) {
+            return boundRemoteObject;
         } else {
-            throw new NoSuchElementException("A distributed object with the received identifier was not found.");
+            throw new NoSuchElementException("A remote object with the received identifier was not found.");
         }
     }
 
     @Override
-    public DistributedObject[] list() {
-        return boundDistributedObjects.values().toArray(new DistributedObject[]{});
+    public RemoteObject[] list() {
+        return boundRemoteObjects.values().toArray(new RemoteObject[]{});
     }
 }

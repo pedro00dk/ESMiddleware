@@ -1,7 +1,6 @@
 package esm.distribution.messaging.presentation;
 
 import esm.distribution.invocation.AbsoluteObjectReference;
-import esm.distribution.invocation.Skeleton;
 import esm.util.Tuple;
 
 import java.io.Serializable;
@@ -10,7 +9,7 @@ import java.io.Serializable;
  * The method result is used to hold the result and a possible {@link Throwable} of a remote method messaging.
  *
  * @author Pedro Henrique
- * @see Skeleton
+ * @see esm.distribution.invocation.Skeleton
  * @see esm.distribution.invocation.Proxy
  * @see AbsoluteObjectReference
  * @see MethodInvocation

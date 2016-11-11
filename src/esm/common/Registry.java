@@ -1,18 +1,18 @@
 package esm.common;
 
-import esm.distribution.instance.DistributedObject;
+import esm.distribution.instance.RemoteObject;
 import esm.distribution.invocation.AbsoluteObjectReference;
 
 import java.util.NoSuchElementException;
 
 /**
  * The Registry is the main common service that offers invocation transparency between the client and server. Is used to
- * store {@link DistributedObject}s {@link esm.distribution.invocation.Proxy}s by the server, and this objects can be
+ * store {@link RemoteObject}s {@link esm.distribution.invocation.Proxy}s by the server, and this objects can be
  * get by the clients.
  *
  * @author Pedro Henrique
  */
-public interface Registry extends DistributedObject {
+public interface Registry extends RemoteObject {
 
     @Override
     default String getIdentifier() {
@@ -20,45 +20,45 @@ public interface Registry extends DistributedObject {
     }
 
     /**
-     * Bind a {@link DistributedObject} {@link esm.distribution.invocation.Proxy} to this Registry.
+     * Bind a {@link RemoteObject} {@link esm.distribution.invocation.Proxy} to this Registry.
      *
-     * @param distributedObject the object to bind
-     * @throws IllegalArgumentException if the received distributed object is not a proxy
+     * @param remoteObject the object to bind
+     * @throws IllegalArgumentException if the received remote object is not a proxy
      */
-    void bind(DistributedObject distributedObject) throws IllegalArgumentException;
+    void bind(RemoteObject remoteObject) throws IllegalArgumentException;
 
     /**
-     * Bind a {@link DistributedObject} {@link esm.distribution.invocation.Proxy} to this Registry, if is already
-     * bound, rebind the distributed object, if the type is different will throws an {@link IllegalArgumentException}.
+     * Bind a {@link RemoteObject} {@link esm.distribution.invocation.Proxy} to this Registry, if is already
+     * bound, rebind the remote object, if the type is different will throws an {@link IllegalArgumentException}.
      *
-     * @param distributedObject the object to unbind
-     * @throws IllegalArgumentException if the received distributed object is not a proxy
+     * @param remoteObject the object to unbind
+     * @throws IllegalArgumentException if the received remote object is not a proxy
      */
-    void rebind(DistributedObject distributedObject) throws IllegalArgumentException;
+    void rebind(RemoteObject remoteObject) throws IllegalArgumentException;
 
     /**
-     * Unbind a {@link DistributedObject} {@link esm.distribution.invocation.Proxy} to this Registry, this method uses
-     * only the distributed object {@link AbsoluteObjectReference} to remove from this
+     * Unbind a {@link RemoteObject} {@link esm.distribution.invocation.Proxy} to this Registry, this method uses
+     * only the remote object {@link AbsoluteObjectReference} to remove from this
      * Registry.
      *
-     * @param distributedObject the object to unbind
-     * @throws IllegalArgumentException if the received distributed object is not a proxy
+     * @param remoteObject the object to unbind
+     * @throws IllegalArgumentException if the received remote object is not a proxy
      */
-    void unbind(DistributedObject distributedObject) throws IllegalArgumentException;
+    void unbind(RemoteObject remoteObject) throws IllegalArgumentException;
 
     /**
-     * Gets a {@link DistributedObject} {@link esm.distribution.invocation.Proxy} from the Registry.
+     * Gets a {@link RemoteObject} {@link esm.distribution.invocation.Proxy} from the Registry.
      *
-     * @param distributedObjectIdentifier the string type identifier of the distributed object
-     * @return the first found distributed object
+     * @param remoteObjectIdentifier the string type identifier of the remote object
+     * @return the first found remote object
      * @throws NoSuchElementException if no element was found
      */
-    DistributedObject lookup(String distributedObjectIdentifier) throws NoSuchElementException;
+    RemoteObject lookup(String remoteObjectIdentifier) throws NoSuchElementException;
 
     /**
-     * Gets an array with all distributed objects bound in this registry.
+     * Gets an array with all remote objects bound in this registry.
      *
-     * @return a distributed object array
+     * @return a remote object array
      */
-    DistributedObject[] list();
+    RemoteObject[] list();
 }

@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * The MethodInvocation is used to invoke a method in a distributed object, contains the method name, if expect result,
- * arguments and the {@link AbsoluteObjectReference} of the distributed object.
+ * The MethodInvocation is used to invoke a method in a remote object, contains the method name, if expect result,
+ * arguments and the {@link AbsoluteObjectReference} of the remote object.
  *
  * @author Pedro Henrique
  * @see Skeleton
@@ -41,7 +41,7 @@ public class MethodInvocation implements Serializable {
     private boolean expectResult;
 
     /**
-     * The reference to the distributed object where the method will be called.
+     * The reference to the remote object where the method will be called.
      */
     private AbsoluteObjectReference absoluteObjectReference;
 
@@ -51,7 +51,7 @@ public class MethodInvocation implements Serializable {
      * @param methodName              the method name
      * @param expectResult            if the method has result
      * @param methodArguments         the method arguments
-     * @param absoluteObjectReference the reference to the distributed object
+     * @param absoluteObjectReference the reference to the remote object
      */
     public MethodInvocation(String methodName, boolean expectResult, Tuple<Object, Class>[] methodArguments,
                             AbsoluteObjectReference absoluteObjectReference) {
@@ -100,7 +100,7 @@ public class MethodInvocation implements Serializable {
     }
 
     /**
-     * Returns the {@link AbsoluteObjectReference} of the distributed object.
+     * Returns the {@link AbsoluteObjectReference} of the remote object.
      *
      * @return the absolute object reference
      */

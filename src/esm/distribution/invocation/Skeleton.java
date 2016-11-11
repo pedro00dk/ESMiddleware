@@ -11,7 +11,7 @@ import java.util.Objects;
 
 /**
  * Base class for Skeleton objects. This class is created with an {@link AbsoluteObjectReference}, used to identify this
- * object in the {@link Invoker}.
+ * object in the {@link Invoker}. It receives invocations from proxies.
  *
  * @author Pedro Henrique
  * @see Proxy

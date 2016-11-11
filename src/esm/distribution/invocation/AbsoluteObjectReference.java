@@ -7,8 +7,8 @@ import java.net.InetAddress;
 import java.util.Objects;
 
 /**
- * The Absolute Object Reference is used to invocation a distributed object, contains a object id, a server
- * {@link InetAddress} and port.
+ * The Absolute Object Reference is used to invoke a remote object, contains a object id, a server {@link InetAddress}
+ * and port.
  *
  * @author Pedro Henrique
  * @see Skeleton

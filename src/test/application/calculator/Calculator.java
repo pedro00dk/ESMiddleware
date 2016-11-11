@@ -1,11 +1,11 @@
 package test.application.calculator;
 
-import esm.distribution.instance.DistributedObject;
+import esm.distribution.instance.RemoteObject;
 
 /**
  * @author Pedro Henrique
  */
-public interface Calculator extends DistributedObject {
+public interface Calculator extends RemoteObject {
 
     default String getIdentifier() {
         return "Calculator";

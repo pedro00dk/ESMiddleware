@@ -9,8 +9,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Base class for proxy objects. This class is created with an {@link AbsoluteObjectReference} of the distributed
- * object, used to invocation the distributed object {@link Skeleton} methods.
+ * Base class for proxy objects. This class is created with an {@link AbsoluteObjectReference} of the remote object,
+ * used to invocation the remote object {@link Skeleton} methods.
  *
  * @author Pedro Henrique
  * @see Skeleton
@@ -21,7 +21,7 @@ import java.util.Objects;
 public abstract class Proxy implements Serializable {
 
     /**
-     * The {@link AbsoluteObjectReference} of the distributed object {@link Skeleton}.
+     * The {@link AbsoluteObjectReference} of the remote object {@link Skeleton}.
      */
     private AbsoluteObjectReference absoluteObjectReference;
 
@@ -36,9 +36,9 @@ public abstract class Proxy implements Serializable {
     }
 
     /**
-     * Returns the {@link AbsoluteObjectReference} of the distributed object {@link Skeleton}.
+     * Returns the {@link AbsoluteObjectReference} of the remote object {@link Skeleton}.
      *
-     * @return the AbsoluteObjectReference of the distributed object
+     * @return the AbsoluteObjectReference of the remote object
      */
     public final AbsoluteObjectReference getAbsoluteObjectReference() {
         return absoluteObjectReference;
