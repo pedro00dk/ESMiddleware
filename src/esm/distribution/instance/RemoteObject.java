@@ -10,11 +10,7 @@ import java.io.Serializable;
  * This interface is an agreement for the implementation of remote objects.
  * <p>
  * For all methods to be implemented, the parameters and return types should be complex (if has parameters and if does
- * not, returns void).
- * <p>
- * The interface should implement the method {@link #getIdentifier()} that gets the a {@link String} unique type
- * identifier and the ({@link #getAbsoluteObjectReference()}) that returns the {@link AbsoluteObjectReference} of the
- * remote object.
+ * not returns void).
  * <p>
  * The interface that extends this should be implemented two times, the first implementation is the real functional
  * class with the own behaviour methods, but this implementation needs to extend the {@link Skeleton} class, it will
@@ -45,4 +41,9 @@ public interface RemoteObject extends Serializable {
      * @return the absolute object reference
      */
     AbsoluteObjectReference getAbsoluteObjectReference();
+
+    /**
+     * Checks the connection between the {@link Proxy} and the {@link Skeleton}.
+     */
+    String checkConnection();
 }

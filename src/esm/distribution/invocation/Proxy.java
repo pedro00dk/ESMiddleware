@@ -1,5 +1,6 @@
 package esm.distribution.invocation;
 
+import esm.distribution.instance.RemoteObject;
 import esm.distribution.management.Requestor;
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
@@ -18,7 +19,7 @@ import java.util.Objects;
  * @see MethodInvocation
  * @see MethodResult
  */
-public abstract class Proxy implements Serializable {
+public abstract class Proxy implements RemoteObject, Serializable {
 
     /**
      * The {@link AbsoluteObjectReference} of the remote object {@link Skeleton}.
@@ -35,13 +36,22 @@ public abstract class Proxy implements Serializable {
                 = Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.");
     }
 
-    /**
-     * Returns the {@link AbsoluteObjectReference} of the remote object {@link Skeleton}.
-     *
-     * @return the AbsoluteObjectReference of the remote object
-     */
+    @Override
     public final AbsoluteObjectReference getAbsoluteObjectReference() {
         return absoluteObjectReference;
+    }
+
+    @Override
+    public String checkConnection() {
+        try {
+            return (String) invokeRemotely("checkConnection", new Tuple[]{},
+                    false, null, null,
+                    true
+            );
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return null;
     }
 
     /**

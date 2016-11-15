@@ -1,10 +1,12 @@
 package esm.distribution.invocation;
 
+import esm.distribution.instance.RemoteObject;
 import esm.distribution.management.Invoker;
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
 import esm.util.Tuple;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -19,7 +21,7 @@ import java.util.Objects;
  * @see MethodResult
  * @see MethodInvocation
  */
-public abstract class Skeleton {
+public abstract class Skeleton implements RemoteObject, Serializable {
 
     /**
      * The absolute object reference this object.
@@ -36,13 +38,14 @@ public abstract class Skeleton {
                 = Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.");
     }
 
-    /**
-     * Returns the {@link AbsoluteObjectReference} of this object.
-     *
-     * @return the AbsoluteObjectReference
-     */
-    public final AbsoluteObjectReference getAbsoluteObjectReference() {
+    @Override
+    public AbsoluteObjectReference getAbsoluteObjectReference() {
         return absoluteObjectReference;
+    }
+
+    @Override
+    public String checkConnection() {
+        return "connected";
     }
 
     /**
@@ -74,7 +77,6 @@ public abstract class Skeleton {
                 );
                 executionInstance = instanceGetterMethod.invoke(this, instanceGetterMethodArguments);
             } catch (NoSuchMethodException | IllegalAccessException
-
 
 
                     e) {
