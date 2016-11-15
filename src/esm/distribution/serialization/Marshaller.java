@@ -10,7 +10,7 @@ import java.io.*;
 public final class Marshaller {
 
     /**
-     * Private constructor prevents instantiation.
+     * Prevents instantiation.
      */
     private Marshaller() {
     }

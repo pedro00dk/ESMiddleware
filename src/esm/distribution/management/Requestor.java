@@ -4,11 +4,17 @@ import esm.distribution.SOOMConfig;
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
 import esm.distribution.messaging.session.Message;
+import esm.distribution.serialization.Crypto;
 import esm.distribution.serialization.Marshaller;
 import esm.infrastructure.ClientRequestHandler;
 import esm.infrastructure.TransportFactory;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 /**
@@ -49,15 +55,16 @@ public class Requestor {
             );
             clientRequestHandler.connect();
             Message requestMessage = new Message(methodInvocation);
-            clientRequestHandler.send(Marshaller.marshall(requestMessage));
+            clientRequestHandler.send(Crypto.encrypt(Marshaller.marshall(requestMessage)));
             if (methodInvocation.isExpectResult()) {
-                Message replyMessage = (Message) Marshaller.unmarshall(clientRequestHandler.receive());
+                Message replyMessage = (Message) Marshaller.unmarshall(Crypto.decrypt(clientRequestHandler.receive()));
                 return (MethodResult) replyMessage.getBody();
             } else {
                 clientRequestHandler.disconnect();
                 return null;
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | NoSuchPaddingException | NoSuchAlgorithmException
+                | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
         }
         return null;

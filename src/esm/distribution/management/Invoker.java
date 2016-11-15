@@ -6,14 +6,20 @@ import esm.distribution.invocation.Skeleton;
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
 import esm.distribution.messaging.session.Message;
+import esm.distribution.serialization.Crypto;
 import esm.distribution.serialization.Marshaller;
 import esm.infrastructure.ServerRequestConnector;
 import esm.infrastructure.ServerRequestHandler;
 import esm.infrastructure.TransportFactory;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Objects;
@@ -205,17 +211,18 @@ public class Invoker {
              * This method is opposed to the sendRemoteMethodInvocation in the Requestor class
              */
             try {
-                Message requestMessage = (Message) Marshaller.unmarshall(serverRequestHandler.receive());
+                Message requestMessage = (Message) Marshaller.unmarshall(Crypto.decrypt(serverRequestHandler.receive()));
                 MethodInvocation methodInvocation = (MethodInvocation) requestMessage.getBody();
                 Skeleton skeleton = boundSkeletons.get(methodInvocation.getAbsoluteObjectReference());
                 MethodResult methodResult = skeleton.processRemoteInvocation(methodInvocation);
                 if (methodInvocation.isExpectResult()) {
                     Message replyMessage = new Message(methodResult);
-                    serverRequestHandler.send(Marshaller.marshall(replyMessage));
+                    serverRequestHandler.send(Crypto.encrypt(Marshaller.marshall(replyMessage)));
                 } else {
                     serverRequestHandler.disconnect();
                 }
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException | NoSuchPaddingException | NoSuchAlgorithmException
+                    | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
                 e.printStackTrace();
             }
         }
