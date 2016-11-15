@@ -72,7 +72,7 @@ public abstract class Skeleton implements RemoteObject, Serializable {
                 instanceGetterMethodArgumentTypes[i] = methodInvocation.getInstanceGetterMethodArguments()[i].getE2();
             }
             try {
-                Method instanceGetterMethod = getClass().getDeclaredMethod(
+                Method instanceGetterMethod = getClass().getMethod(
                         methodInvocation.getInstanceGetterMethodName(), instanceGetterMethodArgumentTypes
                 );
                 executionInstance = instanceGetterMethod.invoke(this, instanceGetterMethodArguments);
@@ -92,8 +92,7 @@ public abstract class Skeleton implements RemoteObject, Serializable {
             methodArgumentTypes[i] = methodInvocation.getMethodArguments()[i].getE2();
         }
         try {
-            Method method = getClass()
-                    .getDeclaredMethod(methodInvocation.getMethodName(), methodArgumentTypes);
+            Method method = getClass().getMethod(methodInvocation.getMethodName(), methodArgumentTypes);
             Tuple<Object, Class> result = new Tuple<>(
                     method.invoke(executionInstance, methodArguments),
                     method.getReturnType()

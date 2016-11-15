@@ -44,7 +44,8 @@ public abstract class Proxy implements RemoteObject, Serializable {
     @Override
     public String checkConnection() {
         try {
-            return (String) invokeRemotely("checkConnection", new Tuple[]{},
+            return (String) invokeRemotely(
+                    "checkConnection", new Tuple[]{},
                     false, null, null,
                     true
             );
