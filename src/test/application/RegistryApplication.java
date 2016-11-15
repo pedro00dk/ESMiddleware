@@ -1,6 +1,6 @@
 package test.application;
 
-import esm.common.RegistrySkeleton;
+import esm.common.RegistryManager;
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.management.Invoker;
 
@@ -25,19 +25,19 @@ public class RegistryApplication {
 
     public static void main(String[] args) {
         System.out.println("Creating Registry skeleton and  binding in the Invoker");
-        RegistrySkeleton registrySkeleton = new RegistrySkeleton(REGISTRY_ABSOLUTE_OBJECT_REFERENCE);
-        Invoker.getInstance().bind(registrySkeleton);
+        RegistryManager.createRegistryInInvoker(REGISTRY_ABSOLUTE_OBJECT_REFERENCE);
 
         System.out.println("Starting Invoker co-routines");
         Invoker.getInstance().start();
 
-        System.out.println("Press the enter key to stop and close the application");
+        System.out.println("Press the enter key to unbindFromInvoker and close the application");
         try {
             int hell = System.in.read();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             Invoker.getInstance().stop();
+            RegistryManager.destroyRegistryFromInvoker();
         }
         System.out.println("Invoker stopped, closing application");
     }

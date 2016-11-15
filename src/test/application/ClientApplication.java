@@ -1,6 +1,6 @@
 package test.application;
 
-import esm.common.RegistryProxy;
+import esm.common.RegistryManager;
 import test.application.unicastCalculator.UnicastCalculator;
 
 import java.util.Random;
@@ -13,10 +13,10 @@ public class ClientApplication {
     public static void main(String[] args) {
 
         System.out.println("Creating a registry proxy with the Registry AOR");
-        RegistryProxy registryProxy = new RegistryProxy(RegistryApplication.REGISTRY_ABSOLUTE_OBJECT_REFERENCE);
+        RegistryManager.initialize(RegistryApplication.REGISTRY_ABSOLUTE_OBJECT_REFERENCE);
 
         System.out.println("Searching in the registry for RequestCalculator services");
-        UnicastCalculator unicastCalculator = (UnicastCalculator) registryProxy.lookup("UnicastCalculator");
+        UnicastCalculator unicastCalculator = (UnicastCalculator) RegistryManager.lookup("UnicastCalculator");
 
         // Application (sum aleatory values)
 

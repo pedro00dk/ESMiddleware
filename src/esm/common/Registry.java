@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
  *
  * @author Pedro Henrique
  */
-public interface Registry extends StaticRemoteObject {
+interface Registry extends StaticRemoteObject {
 
     @Override
     default String getIdentifier() {

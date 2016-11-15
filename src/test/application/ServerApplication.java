@@ -1,6 +1,6 @@
 package test.application;
 
-import esm.common.RegistryProxy;
+import esm.common.RegistryManager;
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.management.Invoker;
 import test.application.unicastCalculator.UnicastCalculatorProxy;
@@ -38,16 +38,16 @@ public class ServerApplication {
         invoker.start();
 
         System.out.println("Binding the UnicastCalculator proxy in the Registry");
-        RegistryProxy registryProxy = new RegistryProxy(RegistryApplication.REGISTRY_ABSOLUTE_OBJECT_REFERENCE);
-        registryProxy.bind(calculatorProxy);
+        RegistryManager.initialize(RegistryApplication.REGISTRY_ABSOLUTE_OBJECT_REFERENCE);
+        RegistryManager.bind(calculatorProxy);
 
-        System.out.println("Press the enter key to stop and close the application");
+        System.out.println("Press the enter key to unbindFromInvoker and close the application");
         try {
             int byteCount = System.in.read();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            registryProxy.unbind(calculatorProxy);
+            RegistryManager.unbind(calculatorProxy);
             Invoker.getInstance().stop();
         }
         System.out.println("UnicastCalculator proxy unbound from the Registry and Invoker stopped, closing application");
