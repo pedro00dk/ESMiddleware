@@ -1,13 +1,12 @@
 package esm.distribution.management;
 
-import esm.distribution.SOOMConfig;
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
 import esm.distribution.messaging.session.Message;
 import esm.distribution.serialization.Crypto;
 import esm.distribution.serialization.Marshaller;
 import esm.infrastructure.ClientRequestHandler;
-import esm.infrastructure.TransportFactory;
+import esm.infrastructure.impl.tcp.TCPClientRequestHandler;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -48,8 +47,7 @@ public class Requestor {
     public MethodResult sendRemoteMethodInvocation(MethodInvocation methodInvocation) {
         Objects.requireNonNull(methodInvocation, "The method invocation can not be null.");
         try {
-            clientRequestHandler = TransportFactory.newClientRequestHandler(
-                    SOOMConfig.TRANSPORT_PROTOCOL,
+            clientRequestHandler = new TCPClientRequestHandler(
                     methodInvocation.getAbsoluteObjectReference().getServerAddress(),
                     methodInvocation.getAbsoluteObjectReference().getServerPort()
             );

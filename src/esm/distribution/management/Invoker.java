@@ -1,6 +1,5 @@
 package esm.distribution.management;
 
-import esm.distribution.SOOMConfig;
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.invocation.Skeleton;
 import esm.distribution.messaging.presentation.MethodInvocation;
@@ -10,7 +9,7 @@ import esm.distribution.serialization.Crypto;
 import esm.distribution.serialization.Marshaller;
 import esm.infrastructure.ServerRequestConnector;
 import esm.infrastructure.ServerRequestHandler;
-import esm.infrastructure.TransportFactory;
+import esm.infrastructure.impl.tcp.TCPServerRequestConnector;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -97,8 +96,7 @@ public class Invoker {
             try {
                 serverRequestConnectors.put(
                         skeletonServerPort,
-                        TransportFactory.newServerRequestConnector(
-                                SOOMConfig.TRANSPORT_PROTOCOL,
+                        new TCPServerRequestConnector(
                                 skeleton.getAbsoluteObjectReference().getServerAddress(),
                                 skeleton.getAbsoluteObjectReference().getServerPort()
 
