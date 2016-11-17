@@ -19,7 +19,7 @@ import java.util.Objects;
  * @see MethodInvocation
  * @see MethodResult
  */
-public abstract class Proxy implements RemoteObject, Serializable {
+public abstract class Proxy implements RemoteObject {
 
     /**
      * The {@link AbsoluteObjectReference} of the remote object {@link Skeleton}.

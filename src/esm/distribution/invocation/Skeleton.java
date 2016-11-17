@@ -21,7 +21,7 @@ import java.util.Objects;
  * @see MethodResult
  * @see MethodInvocation
  */
-public abstract class Skeleton implements RemoteObject, Serializable {
+public abstract class Skeleton implements RemoteObject {
 
     /**
      * The absolute object reference this object.
