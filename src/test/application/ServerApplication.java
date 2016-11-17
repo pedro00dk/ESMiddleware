@@ -3,6 +3,8 @@ package test.application;
 import esm.common.RegistryManager;
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.management.Invoker;
+import test.application.staticFibonacci.StaticFibonacciProxy;
+import test.application.staticFibonacci.StaticFibonacciSkeleton;
 import test.application.unicastCalculator.UnicastCalculatorProxy;
 import test.application.unicastCalculator.UnicastCalculatorSkeleton;
 
@@ -15,31 +17,31 @@ import java.net.UnknownHostException;
  */
 public class ServerApplication {
 
-    private static AbsoluteObjectReference CALCULATOR_ABSOLUTE_OBJECT_REFERENCE;
+    private static AbsoluteObjectReference FIBONACCI_ABSOLUTE_OBJECT_REFERENCE;
 
     static {
         try {
-            CALCULATOR_ABSOLUTE_OBJECT_REFERENCE = new AbsoluteObjectReference(133, InetAddress.getLocalHost(), 50000);
+            FIBONACCI_ABSOLUTE_OBJECT_REFERENCE = new AbsoluteObjectReference(133, InetAddress.getLocalHost(), 50000);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) throws Throwable {
-        System.out.println("Creating the UnicastCalculator Skeleton and Proxy");
-        UnicastCalculatorSkeleton calculatorSkeleton = new UnicastCalculatorSkeleton(CALCULATOR_ABSOLUTE_OBJECT_REFERENCE);
-        UnicastCalculatorProxy calculatorProxy = new UnicastCalculatorProxy(CALCULATOR_ABSOLUTE_OBJECT_REFERENCE);
+        System.out.println("Creating the StaticFibonacci Skeleton and Proxy");
+        StaticFibonacciSkeleton fibonacciSkeleton = new StaticFibonacciSkeleton(FIBONACCI_ABSOLUTE_OBJECT_REFERENCE);
+        StaticFibonacciProxy fibonacciProxy = new StaticFibonacciProxy(FIBONACCI_ABSOLUTE_OBJECT_REFERENCE);
 
         System.out.println("Binding the UnicastCalculator skeleton in the Invoker");
         Invoker invoker = Invoker.getInstance();
-        invoker.bind(calculatorSkeleton);
+        invoker.bind(fibonacciSkeleton);
 
         System.out.println("Starting the Invoker co-routines");
         invoker.start();
 
         System.out.println("Binding the UnicastCalculator proxy in the Registry");
         RegistryManager.initialize(RegistryApplication.REGISTRY_ABSOLUTE_OBJECT_REFERENCE);
-        RegistryManager.bind(calculatorProxy);
+        RegistryManager.bind(fibonacciProxy);
 
         System.out.println("Press the enter key to unbindFromInvoker and close the application");
         try {
@@ -47,7 +49,7 @@ public class ServerApplication {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            RegistryManager.unbind(calculatorProxy);
+            RegistryManager.unbind(fibonacciProxy);
             Invoker.getInstance().stop();
         }
         System.out.println("UnicastCalculator proxy unbound from the Registry and Invoker stopped, closing application");
