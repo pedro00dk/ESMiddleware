@@ -4,6 +4,7 @@ import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.util.Tuple;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -60,9 +61,11 @@ public class MethodInvocation implements Serializable {
     private boolean expectResult;
 
     /**
-     * The reference to the remote object where the method will be called.
+     * The references to the remote objects where the method will be called or already was called, the last element in
+     * this list is the AbsoluteObjectReference of the remote object where the method will be called, the other elements
+     * are checking elements, address where a location forwarder forwards the invocation to another remote object.
      */
-    private AbsoluteObjectReference absoluteObjectReference;
+    private ArrayList<AbsoluteObjectReference> absoluteObjectReferences;
 
     /**
      * Create the method invocation with the received arguments. The
@@ -88,8 +91,10 @@ public class MethodInvocation implements Serializable {
         this.instanceGetterMethodName = requireIndependentInstance ? instanceGetterMethodName : null;
         this.instanceGetterMethodArguments = requireIndependentInstance ? instanceGetterMethodArguments : null;
         this.expectResult = expectResult;
-        this.absoluteObjectReference
-                = Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.");
+        absoluteObjectReferences = new ArrayList<>();
+        absoluteObjectReferences.add(
+                Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.")
+        );
     }
 
     /**
@@ -157,12 +162,22 @@ public class MethodInvocation implements Serializable {
     }
 
     /**
-     * Returns the {@link AbsoluteObjectReference} of the remote object.
+     * Returns the {@link AbsoluteObjectReference}s of the remote object. The last in the current absolute object
+     * reference.
+     *
+     * @return the absolute object reference
+     */
+    public ArrayList<AbsoluteObjectReference> getAbsoluteObjectReferences() {
+        return absoluteObjectReferences;
+    }
+
+    /**
+     * Returns the last {@link AbsoluteObjectReference} of the remote object.
      *
      * @return the absolute object reference
      */
     public AbsoluteObjectReference getAbsoluteObjectReference() {
-        return absoluteObjectReference;
+        return absoluteObjectReferences.get(absoluteObjectReferences.size() - 1);
     }
 
     /**
