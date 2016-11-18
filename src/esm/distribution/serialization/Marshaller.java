@@ -20,13 +20,17 @@ public final class Marshaller {
      *
      * @param objData the object to serialize
      * @return the serialized object
-     * @throws IOException if an I/O exception of some sort has occurred
      */
-    public static byte[] marshall(Object objData) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-        objectOutputStream.writeObject(objData);
-        return byteArrayOutputStream.toByteArray();
+    public static byte[] marshall(Object objData) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(objData);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new Error();
+        }
     }
 
     /**
@@ -34,11 +38,14 @@ public final class Marshaller {
      *
      * @param data the byte array to be processed
      * @return the deserialized object
-     * @throws IOException            if an I/O exception of some sort has occurred
-     * @throws ClassNotFoundException if the class type was not found
      */
     @SuppressWarnings("unchecked")
-    public static Object unmarshall(byte[] data) throws IOException, ClassNotFoundException {
-        return new ObjectInputStream(new ByteArrayInputStream(data)).readObject();
+    public static Object unmarshall(byte[] data) {
+        try {
+            return new ObjectInputStream(new ByteArrayInputStream(data)).readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new Error();
+        }
     }
 }

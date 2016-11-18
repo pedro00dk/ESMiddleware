@@ -8,6 +8,7 @@ import esm.distribution.serialization.Marshaller;
 import esm.infrastructure.ClientRequestHandler;
 import esm.infrastructure.impl.tcp.TCPClientRequestHandler;
 
+import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -37,10 +38,9 @@ public class Requestor {
      *
      * @param methodInvocation the method invocation, can not be null
      * @return the {@link MethodResult}, or null if a result is not expected
-     * @throws Exception this method can throws various exceptions associated with the connection, serialization and
-     *                   cryptography
+     * @throws IOException if the connection fails, reset or was refused
      */
-    public MethodResult sendRemoteMethodInvocation(MethodInvocation methodInvocation) throws Exception {
+    public MethodResult sendRemoteMethodInvocation(MethodInvocation methodInvocation) throws IOException {
         Objects.requireNonNull(methodInvocation, "The method invocation can not be null.");
         clientRequestHandler = new TCPClientRequestHandler(
                 methodInvocation.getAbsoluteObjectReference().getServerAddress(),
@@ -56,6 +56,5 @@ public class Requestor {
             clientRequestHandler.disconnect();
             return null;
         }
-
     }
 }

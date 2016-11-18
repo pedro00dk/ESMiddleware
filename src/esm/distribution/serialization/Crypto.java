@@ -30,17 +30,17 @@ public final class Crypto {
      *
      * @param data the data to encrypt
      * @return the encrypted data
-     * @throws NoSuchPaddingException    if a encryption error occurs
-     * @throws NoSuchAlgorithmException  if a encryption error occurs
-     * @throws InvalidKeyException       if a encryption error occurs
-     * @throws BadPaddingException       if a encryption error occurs
-     * @throws IllegalBlockSizeException if a encryption error occurs
      */
-    public static byte[] encrypt(byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        return cipher.doFinal(data);
+    public static byte[] encrypt(byte[] data) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            return cipher.doFinal(data);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
+                | InvalidKeyException e) {
+            e.printStackTrace();
+            throw new Error();
+        }
     }
 
     /**
@@ -48,16 +48,16 @@ public final class Crypto {
      *
      * @param data the data to decrypt
      * @return the decrypted data
-     * @throws NoSuchPaddingException    if a encryption error occurs
-     * @throws NoSuchAlgorithmException  if a encryption error occurs
-     * @throws InvalidKeyException       if a encryption error occurs
-     * @throws BadPaddingException       if a encryption error occurs
-     * @throws IllegalBlockSizeException if a encryption error occurs
      */
-    public static byte[] decrypt(byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        return cipher.doFinal(data);
+    public static byte[] decrypt(byte[] data) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return cipher.doFinal(data);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
+                | InvalidKeyException e) {
+            e.printStackTrace();
+            throw new Error();
+        }
     }
 }

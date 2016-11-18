@@ -11,14 +11,8 @@ import esm.infrastructure.ServerRequestConnector;
 import esm.infrastructure.ServerRequestHandler;
 import esm.infrastructure.impl.tcp.TCPServerRequestConnector;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Objects;
@@ -104,6 +98,8 @@ public class Invoker {
                 );
             } catch (IOException e) {
                 e.printStackTrace();
+                throw new Error();
+                // IOException can not be treated in the Invoker
             }
         }
     }
@@ -172,21 +168,18 @@ public class Invoker {
 
         @Override
         public void run() {
-            try {
-                serverRequestConnector.setTimeout(100);
-                while (invokerRunning.get()) {
-                    try {
-                        ServerRequestHandler serverRequestHandler = serverRequestConnector.accept();
-                        new Thread(new RequestProcessor(serverRequestHandler)).start();
-                    } catch (SocketTimeoutException e) {
-                        // Do nothing
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            while (invokerRunning.get()) {
+                try {
+                    serverRequestConnector.setTimeout(100);
+                    ServerRequestHandler serverRequestHandler = serverRequestConnector.accept();
+                    new Thread(new RequestProcessor(serverRequestHandler)).start();
+                } catch (SocketTimeoutException e) {
+                    // Do nothing
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new Error();
+                    // IOException can not be treated in the Invoker
                 }
-
-            } catch (SocketException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -219,9 +212,10 @@ public class Invoker {
                 } else {
                     serverRequestHandler.disconnect();
                 }
-            } catch (IOException | ClassNotFoundException | NoSuchPaddingException | NoSuchAlgorithmException
-                    | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
+                throw new Error();
+                // IOException can not be treated in the Invoker
             }
         }
     }
