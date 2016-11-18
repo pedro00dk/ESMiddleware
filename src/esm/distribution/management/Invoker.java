@@ -62,7 +62,7 @@ public class Invoker {
     private AtomicBoolean invokerRunning;
 
     /**
-     * Creates the receiver without registered invokers.
+     * Creates the receiver without registered {@link Skeleton}s.
      */
     private Invoker() {
         boundSkeletons = new Hashtable<>();

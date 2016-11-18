@@ -115,6 +115,8 @@ public abstract class Proxy implements RemoteObject {
             if (methodResult.getRemoteMiddlewareException() != null) {
                 methodResult.getRemoteMiddlewareException().printStackTrace();
                 throw new Error();
+            } else if (proxyOptions.isUpdateAbsoluteObjectReference()) {
+                absoluteObjectReference = methodResult.getAbsoluteObjectReference();
             }
             if (methodResult.getRemoteMethodException() != null) {
                 throw methodResult.getRemoteMethodException();
