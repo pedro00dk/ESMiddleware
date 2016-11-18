@@ -6,7 +6,8 @@ import esm.util.Tuple;
 import java.io.Serializable;
 
 /**
- * The method result is used to hold the result and a possible {@link Throwable} of a remote method messaging.
+ * The method result is used to hold the result and a possible {@link Exception} of a remote method messaging or of the
+ * remote middleware.
  *
  * @author Pedro Henrique
  * @see esm.distribution.invocation.Skeleton
@@ -33,21 +34,29 @@ public class MethodResult implements Serializable {
     private Tuple<Object, Class> result;
 
     /**
-     * The {@link Throwable} throw in the remote method, null if nothing was throw.
+     * The {@link Exception} throw in the remote method, null if nothing was throw.
      */
-    private Throwable throwable;
+    private Exception remoteMethodException;
+
+    /**
+     * The {@link Exception} throw in the remote middleware, null if nothing was throw.
+     */
+    private Exception remoteMiddlewareException;
 
     /**
      * Creates a new method result with the remote method messaging result and possibles exceptions.
      *
-     * @param methodName the method name
-     * @param result     the remote method messaging result and result type in a tuple
-     * @param throwable  the possible throwable throw in the remote method
+     * @param methodName                the method name
+     * @param result                    the remote method messaging result and result type in a tuple
+     * @param remoteMethodException     the possible exception throw in the remote method
+     * @param remoteMiddlewareException the possible exception throw in the remote middleware
      */
-    public MethodResult(String methodName, Tuple<Object, Class> result, Throwable throwable) {
+    public MethodResult(String methodName, Tuple<Object, Class> result, Exception remoteMethodException,
+                        Exception remoteMiddlewareException) {
         this.methodName = methodName;
         this.result = result;
-        this.throwable = throwable;
+        this.remoteMethodException = remoteMethodException;
+        this.remoteMiddlewareException = remoteMiddlewareException;
     }
 
     /**
@@ -79,11 +88,20 @@ public class MethodResult implements Serializable {
     }
 
     /**
-     * Returns the {@link Throwable} throw in the remote method, null if nothing was throw.
+     * Returns the {@link Exception} throw in the remote method, null if nothing was throw.
      *
-     * @return the throwable
+     * @return the remote method exception
      */
-    public Throwable getThrowable() {
-        return throwable;
+    public Exception getRemoteMethodException() {
+        return remoteMethodException;
+    }
+
+    /**
+     * Returns the {@link Exception} throw in the remote middleware, null if nothing was throw.
+     *
+     * @return the remote middleware exception
+     */
+    public Exception getRemoteMiddlewareException() {
+        return remoteMiddlewareException;
     }
 }
