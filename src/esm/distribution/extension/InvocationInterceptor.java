@@ -1,6 +1,6 @@
 package esm.distribution.extension;
 
-import esm.util.ThrowableFunction;
+import esm.util.ExcFunction;
 
 /**
  * This interface defines the basic method to create method invocation interceptors. This interceptors does not
@@ -16,7 +16,7 @@ public interface InvocationInterceptor<T, U> {
      * @param intercepted the intercepted method
      * @param argument    the arguments that would be used in the intercepted method
      * @return a result of the same type of the result of the intercepted method
-     * @throws Throwable possible exception or error throw by the intercepted function or by the interception operations
+     * @throws Exception possible exception throw by the intercepted function or by the interception operations
      */
-    U intercept(ThrowableFunction<T, U> intercepted, T argument) throws Throwable;
+    U intercept(ExcFunction<T, U> intercepted, T argument) throws Exception;
 }

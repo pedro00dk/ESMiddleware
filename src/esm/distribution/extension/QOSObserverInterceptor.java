@@ -2,7 +2,7 @@ package esm.distribution.extension;
 
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
-import esm.util.ThrowableFunction;
+import esm.util.ExcFunction;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * The QOSObserverInterceptor (QOS -> Quality Of Service) is responsible to get information about a conjunct of
  * invocations in the same {@link esm.distribution.invocation.Skeleton}, each time thats the method
  * {@link esm.distribution.invocation.Skeleton#processRemoteInvocation(MethodInvocation)} is called in the object to
- * check, it should be called using the {@link #intercept(ThrowableFunction, MethodInvocation)} method, this method will
+ * check, it should be called using the {@link #intercept(ExcFunction, MethodInvocation)} method, this method will
  * get the information about the time to execute the method, the number of invocations done, and the current number of
  * invocations.
  *
@@ -49,8 +49,8 @@ public class QOSObserverInterceptor implements InvocationInterceptor<MethodInvoc
     }
 
     @Override
-    public MethodResult intercept(ThrowableFunction<MethodInvocation, MethodResult> intercepted,
-                                  MethodInvocation argument) throws Throwable {
+    public MethodResult intercept(ExcFunction<MethodInvocation, MethodResult> intercepted,
+                                  MethodInvocation argument) throws Exception {
         invocationCount.incrementAndGet();
         currentInvocationCount.incrementAndGet();
         long startTime = System.currentTimeMillis();

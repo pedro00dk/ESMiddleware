@@ -6,7 +6,7 @@ import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.management.Requestor;
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
-import esm.util.ThrowableFunction;
+import esm.util.ExcFunction;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -52,8 +52,8 @@ public class MultiRequestInterceptor implements InvocationInterceptor<MethodInvo
     }
 
     @Override
-    public MethodResult intercept(ThrowableFunction<MethodInvocation, MethodResult> intercepted,
-                                  MethodInvocation argument) throws Throwable {
+    public MethodResult intercept(ExcFunction<MethodInvocation, MethodResult> intercepted,
+                                  MethodInvocation argument) throws Exception {
         ArrayList<AbsoluteObjectReference> absoluteObjectReferences = new ArrayList<>();
         for (int i = 0; i < numberOfAttempts; i++) {
             try {
