@@ -8,12 +8,6 @@ import esm.distribution.serialization.Marshaller;
 import esm.infrastructure.ClientRequestHandler;
 import esm.infrastructure.impl.tcp.TCPClientRequestHandler;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 /**
@@ -43,28 +37,25 @@ public class Requestor {
      *
      * @param methodInvocation the method invocation, can not be null
      * @return the {@link MethodResult}, or null if a result is not expected
+     * @throws Exception this method can throws various exceptions associated with the connection, serialization and
+     *                   cryptography
      */
-    public MethodResult sendRemoteMethodInvocation(MethodInvocation methodInvocation) {
+    public MethodResult sendRemoteMethodInvocation(MethodInvocation methodInvocation) throws Exception {
         Objects.requireNonNull(methodInvocation, "The method invocation can not be null.");
-        try {
-            clientRequestHandler = new TCPClientRequestHandler(
-                    methodInvocation.getAbsoluteObjectReference().getServerAddress(),
-                    methodInvocation.getAbsoluteObjectReference().getServerPort()
-            );
-            clientRequestHandler.connect();
-            Message requestMessage = new Message(methodInvocation);
-            clientRequestHandler.send(Crypto.encrypt(Marshaller.marshall(requestMessage)));
-            if (methodInvocation.isExpectResult()) {
-                Message replyMessage = (Message) Marshaller.unmarshall(Crypto.decrypt(clientRequestHandler.receive()));
-                return (MethodResult) replyMessage.getBody();
-            } else {
-                clientRequestHandler.disconnect();
-                return null;
-            }
-        } catch (IOException | ClassNotFoundException | NoSuchPaddingException | NoSuchAlgorithmException
-                | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-            e.printStackTrace();
+        clientRequestHandler = new TCPClientRequestHandler(
+                methodInvocation.getAbsoluteObjectReference().getServerAddress(),
+                methodInvocation.getAbsoluteObjectReference().getServerPort()
+        );
+        clientRequestHandler.connect();
+        Message requestMessage = new Message(methodInvocation);
+        clientRequestHandler.send(Crypto.encrypt(Marshaller.marshall(requestMessage)));
+        if (methodInvocation.isExpectResult()) {
+            Message replyMessage = (Message) Marshaller.unmarshall(Crypto.decrypt(clientRequestHandler.receive()));
+            return (MethodResult) replyMessage.getBody();
+        } else {
+            clientRequestHandler.disconnect();
+            return null;
         }
-        return null;
+
     }
 }
