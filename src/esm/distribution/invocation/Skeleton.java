@@ -6,7 +6,6 @@ import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
 import esm.util.Tuple;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -50,15 +49,18 @@ public abstract class Skeleton implements RemoteObject {
 
     /**
      * This method calls a method in the sub-class or super class with the received name and parameter types. If the
-     * method implementation throws a {@link Throwable}, the method was not found or the is blocked, it will returns a
-     * {@link MethodResult} with the {@link Throwable}, otherwise will returns the {@link MethodResult} with the method
-     * result. If the received {@link MethodInvocation} {@link MethodInvocation#isExpectResult()} is false, null is
-     * returned and all {@link Throwable}s are ignored.
-     * The secondary invocations to get execution objects are treated inside this method.
+     * method implementation throws an {@link Exception}, it will returns a {@link MethodResult} with the
+     * exception throw, otherwise will returns the {@link MethodResult} with the method result, if a reflection
+     * exception is throw, a method result with the middleware exception will be returned. If the received
+     * {@link MethodInvocation} {@link MethodInvocation#isExpectResult()} is false, null is returned and all
+     * {@link Exception}s are ignored.
+     * The secondary invocations to get execution objects are treated inside this method and the exception throws are
+     * sent by the method result as the main method.
      *
      * @param methodInvocation the method invocation, can not be null
      * @return the method result
      */
+    @SuppressWarnings("unchecked")
     public final MethodResult processRemoteInvocation(MethodInvocation methodInvocation) {
         Objects.requireNonNull(methodInvocation, "The method invocation can not be null.");
         Object executionInstance = this;
@@ -76,13 +78,10 @@ public abstract class Skeleton implements RemoteObject {
                         methodInvocation.getInstanceGetterMethodName(), instanceGetterMethodArgumentTypes
                 );
                 executionInstance = instanceGetterMethod.invoke(this, instanceGetterMethodArguments);
-            } catch (NoSuchMethodException | IllegalAccessException
-
-
-                    e) {
-                return new MethodResult(methodInvocation.getMethodName(), null, e);
+            } catch (NoSuchMethodException | IllegalAccessException e) {
+                return new MethodResult(methodInvocation.getMethodName(), null, null, e);
             } catch (InvocationTargetException e) {
-                return new MethodResult(methodInvocation.getMethodName(), null, e.getCause());
+                return new MethodResult(methodInvocation.getMethodName(), null, (Exception) e.getCause(), null);
             }
         }
         Object[] methodArguments = new Object[methodInvocation.getMethodArguments().length];
@@ -98,14 +97,20 @@ public abstract class Skeleton implements RemoteObject {
                     method.getReturnType()
             );
             if (methodInvocation.isExpectResult()) {
-                return new MethodResult(methodInvocation.getMethodName(), result, null);
+                return new MethodResult(methodInvocation.getMethodName(), result, null, null);
             } else {
                 return null;
             }
         } catch (NoSuchMethodException | IllegalAccessException e) {
-            return new MethodResult(methodInvocation.getMethodName(), null, e);
+            if (methodInvocation.isExpectResult()) {
+                return new MethodResult(methodInvocation.getMethodName(), null, null, e);
+            }
+            return null;
         } catch (InvocationTargetException e) {
-            return new MethodResult(methodInvocation.getMethodName(), null, e.getCause());
+            if (methodInvocation.isExpectResult()) {
+                return new MethodResult(methodInvocation.getMethodName(), null, (Exception) e.getCause(), null);
+            }
+            return null;
         }
     }
 }
