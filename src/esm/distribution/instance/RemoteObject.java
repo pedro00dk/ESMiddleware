@@ -10,7 +10,7 @@ import java.io.Serializable;
  * This interface is an agreement for the implementation of remote objects.
  * <p>
  * For all methods to be implemented, the parameters and return types should be complex (if has parameters and if does
- * not returns void).
+ * not returns void). The methods can only throws {@link Exception}s, not {@link Throwable}s or {@link Error}s.
  * <p>
  * The interface that extends this should be implemented two times, the first implementation is the real functional
  * class with the own behaviour methods, but this implementation needs to extend the {@link Skeleton} class, it will
