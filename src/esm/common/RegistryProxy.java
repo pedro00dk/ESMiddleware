@@ -5,6 +5,7 @@ import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.invocation.Proxy;
 import esm.util.Tuple;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 /**
@@ -81,6 +82,24 @@ public final class RegistryProxy extends Proxy implements Registry {
         try {
             return (RemoteObject) invokeRemotely(
                     "lookup", new Tuple[]{new Tuple<>(remoteObjectIdentifier, String.class)},
+                    false, null, null,
+                    true
+            );
+        } catch (Throwable throwable) {
+            if (throwable instanceof IllegalArgumentException) {
+                throw (IllegalArgumentException) throwable;
+            }
+            throwable.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public ArrayList<RemoteObject> lookupAll(String remoteObjectIdentifier) {
+        try {
+            return (ArrayList<RemoteObject>) invokeRemotely(
+                    "lookupAll", new Tuple[]{new Tuple<>(remoteObjectIdentifier, String.class)},
                     false, null, null,
                     true
             );

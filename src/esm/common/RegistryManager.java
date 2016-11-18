@@ -4,6 +4,7 @@ import esm.distribution.instance.RemoteObject;
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.management.Invoker;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -47,7 +48,7 @@ public final class RegistryManager {
      * @throws IllegalArgumentException if the received remote object is not a proxy
      */
     public static void bind(RemoteObject remoteObject) throws IllegalArgumentException {
-        Objects.requireNonNull(registryProxy, "The Registry poxy was not initialized.");
+        Objects.requireNonNull(registryProxy, "The Registry proxy was not initialized.");
         registryProxy.bind(remoteObject);
     }
 
@@ -59,7 +60,7 @@ public final class RegistryManager {
      * @throws IllegalArgumentException if the received remote object is not a proxy
      */
     public static void rebind(RemoteObject remoteObject) throws IllegalArgumentException {
-        Objects.requireNonNull(registryProxy, "The Registry poxy was not initialized.");
+        Objects.requireNonNull(registryProxy, "The Registry proxy was not initialized.");
         registryProxy.rebind(remoteObject);
     }
 
@@ -72,7 +73,7 @@ public final class RegistryManager {
      * @throws IllegalArgumentException if the received remote object is not a proxy
      */
     public static void unbind(RemoteObject remoteObject) throws IllegalArgumentException {
-        Objects.requireNonNull(registryProxy, "The Registry poxy was not initialized.");
+        Objects.requireNonNull(registryProxy, "The Registry proxy was not initialized.");
         registryProxy.unbind(remoteObject);
     }
 
@@ -84,8 +85,19 @@ public final class RegistryManager {
      * @throws NoSuchElementException if no element was found
      */
     public static RemoteObject lookup(String remoteObjectIdentifier) throws NoSuchElementException {
-        Objects.requireNonNull(registryProxy, "The Registry poxy was not initialized.");
+        Objects.requireNonNull(registryProxy, "The Registry proxy was not initialized.");
         return registryProxy.lookup(remoteObjectIdentifier);
+    }
+
+    /**
+     * Gets all {@link RemoteObject}s {@link esm.distribution.invocation.Proxy} from the Registry.
+     *
+     * @param remoteObjectIdentifier the string type identifier of the remote object
+     * @return the found remote objects
+     */
+    public static ArrayList<RemoteObject> lookupAll(String remoteObjectIdentifier) {
+        Objects.requireNonNull(registryProxy, "The Registry proxy was not initialized.");
+        return registryProxy.lookupAll(remoteObjectIdentifier);
     }
 
     /**
@@ -94,7 +106,7 @@ public final class RegistryManager {
      * @return a remote object array
      */
     public static RemoteObject[] list() {
-        Objects.requireNonNull(registryProxy, "The Registry poxy was not initialized.");
+        Objects.requireNonNull(registryProxy, "The Registry proxy was not initialized.");
         return registryProxy.list();
     }
 

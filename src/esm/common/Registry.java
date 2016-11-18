@@ -4,6 +4,7 @@ import esm.distribution.instance.RemoteObject;
 import esm.distribution.instance.StaticRemoteObject;
 import esm.distribution.invocation.AbsoluteObjectReference;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 /**
@@ -55,6 +56,14 @@ interface Registry extends StaticRemoteObject {
      * @throws NoSuchElementException if no element was found
      */
     RemoteObject lookup(String remoteObjectIdentifier) throws NoSuchElementException;
+
+    /**
+     * Gets all {@link RemoteObject}s {@link esm.distribution.invocation.Proxy} from the Registry.
+     *
+     * @param remoteObjectIdentifier the string type identifier of the remote object
+     * @return the found remote objects
+     */
+    ArrayList<RemoteObject> lookupAll(String remoteObjectIdentifier);
 
     /**
      * Gets an array with all remote objects bound in this registry.

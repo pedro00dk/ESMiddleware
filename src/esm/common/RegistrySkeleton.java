@@ -5,10 +5,7 @@ import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.invocation.Proxy;
 import esm.distribution.invocation.Skeleton;
 
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * The Registry {@link Skeleton} implementation, contains methods to bind, unbind and get {@link RemoteObject}s.
@@ -79,18 +76,30 @@ public final class RegistrySkeleton extends Skeleton implements Registry {
     public RemoteObject lookup(String remoteObjectIdentifier)
             throws NoSuchElementException {
         Objects.requireNonNull(remoteObjectIdentifier, "The remote object identifier can not be null.");
-        RemoteObject boundRemoteObject = null;
+        RemoteObject identifiedBoundRemoteObject = null;
         for (RemoteObject remoteObject : boundRemoteObjects.values()) {
             if (remoteObject.getIdentifier().equals(remoteObjectIdentifier)) {
-                boundRemoteObject = remoteObject;
+                identifiedBoundRemoteObject = remoteObject;
                 break;
             }
         }
-        if (boundRemoteObject != null) {
-            return boundRemoteObject;
+        if (identifiedBoundRemoteObject != null) {
+            return identifiedBoundRemoteObject;
         } else {
             throw new NoSuchElementException("A remote object with the received identifier was not found.");
         }
+    }
+
+    @Override
+    public ArrayList<RemoteObject> lookupAll(String remoteObjectIdentifier) {
+        Objects.requireNonNull(remoteObjectIdentifier, "The remote object identifier can not be null.");
+        ArrayList<RemoteObject> identifiedBoundRemoteObjects = new ArrayList<>();
+        for (RemoteObject remoteObject : boundRemoteObjects.values()) {
+            if (remoteObject.getIdentifier().equals(remoteObjectIdentifier)) {
+                identifiedBoundRemoteObjects.add(remoteObject);
+            }
+        }
+        return identifiedBoundRemoteObjects;
     }
 
     @Override
