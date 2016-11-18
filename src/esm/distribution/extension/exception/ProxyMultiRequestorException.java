@@ -1,17 +1,19 @@
 package esm.distribution.extension.exception;
 
+import esm.distribution.extension.ProxyMultiRequestInterceptor;
+
 /**
- * This exception indicates that a {@link esm.distribution.extension.MultiRequestInterceptor} was failed to send a
+ * This exception indicates that a {@link ProxyMultiRequestInterceptor} was failed to send a
  * remote invocation in a maximum number of attempts received.
  *
  * @author Pedro Henrique
  */
-public class MultiRequestorMaxAttemptsReachedException extends Exception {
+public class ProxyMultiRequestorException extends Exception {
 
     /**
      * Creates the exception with no message.
      */
-    public MultiRequestorMaxAttemptsReachedException() {
+    public ProxyMultiRequestorException() {
     }
 
     /**
@@ -19,7 +21,7 @@ public class MultiRequestorMaxAttemptsReachedException extends Exception {
      *
      * @param message the exception message
      */
-    public MultiRequestorMaxAttemptsReachedException(String message) {
+    public ProxyMultiRequestorException(String message) {
         super(message);
     }
 }

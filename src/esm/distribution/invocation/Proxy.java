@@ -1,6 +1,7 @@
 package esm.distribution.invocation;
 
-import esm.distribution.extension.MultiRequestInterceptor;
+import esm.distribution.extension.ProxyMultiRequestInterceptor;
+import esm.distribution.extension.ProxyOptions;
 import esm.distribution.instance.RemoteObject;
 import esm.distribution.management.Requestor;
 import esm.distribution.messaging.presentation.MethodInvocation;
@@ -27,36 +28,31 @@ public abstract class Proxy implements RemoteObject {
     private AbsoluteObjectReference absoluteObjectReference;
 
     /**
-     * The max number of different connection tries in different remote objects.
+     * The proxy connection options, the options are only used internally.
      */
-    private Integer numberOfAttempts;
+    private ProxyOptions proxyOptions;
 
     /**
-     * Creates the client proxy with the received {@link AbsoluteObjectReference}.
+     * Creates the client proxy with the received {@link AbsoluteObjectReference}  and default {@link ProxyOptions}.
      *
      * @param absoluteObjectReference the reference to the server skeleton object
      */
     public Proxy(AbsoluteObjectReference absoluteObjectReference) {
         this.absoluteObjectReference
                 = Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.");
-        numberOfAttempts = 1;
+        proxyOptions = new ProxyOptions();
     }
 
     /**
-     * Creates the client proxy with the received {@link AbsoluteObjectReference} and the number of attempts for
-     * connections, if is 1, this proxy will try to send the invocation to the remote object of the received absolute
-     * object reference, if is greater than 1, it will try to connect with different remote objects.
+     * Creates the client proxy with the received {@link AbsoluteObjectReference} and {@link ProxyOptions}.
      *
      * @param absoluteObjectReference the reference to the server skeleton object
-     * @param numberOfAttempts        the number of connection attempts in different remote objects
+     * @param proxyOptions            the proxy connection options
      */
-    public Proxy(AbsoluteObjectReference absoluteObjectReference, Integer numberOfAttempts) {
+    public Proxy(AbsoluteObjectReference absoluteObjectReference, ProxyOptions proxyOptions) {
         this.absoluteObjectReference
                 = Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.");
-        if (numberOfAttempts < 1 || numberOfAttempts > 100) {
-            throw new IllegalArgumentException("The number of attempts should be between 1 and 100");
-        }
-        this.numberOfAttempts = numberOfAttempts;
+        this.proxyOptions = Objects.requireNonNull(proxyOptions, "The Proxy options can not be null.");
 
     }
 
@@ -113,7 +109,7 @@ public abstract class Proxy implements RemoteObject {
         MethodInvocation methodInvocation = new MethodInvocation(methodName, methodArguments,
                 requireIndependentInstance, instanceGetterMethodName, instanceGetterMethodArguments, expectResult,
                 absoluteObjectReference);
-        MethodResult methodResult = new MultiRequestInterceptor(getIdentifier(), numberOfAttempts)
+        MethodResult methodResult = new ProxyMultiRequestInterceptor(getIdentifier(), proxyOptions)
                 .intercept(new Requestor()::sendRemoteMethodInvocation, methodInvocation);
         if (expectResult) {
             if (methodResult.getRemoteMiddlewareException() != null) {

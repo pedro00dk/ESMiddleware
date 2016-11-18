@@ -1,12 +1,11 @@
 package test.application;
 
 import esm.common.RegistryManager;
+import esm.distribution.extension.ProxyOptions;
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.management.Invoker;
 import test.application.staticFibonacci.StaticFibonacciProxy;
 import test.application.staticFibonacci.StaticFibonacciSkeleton;
-import test.application.unicastCalculator.UnicastCalculatorProxy;
-import test.application.unicastCalculator.UnicastCalculatorSkeleton;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -30,7 +29,10 @@ public class ServerApplication1 {
     public static void main(String[] args) throws Throwable {
         System.out.println("Creating the StaticFibonacci Skeleton and Proxy");
         StaticFibonacciSkeleton fibonacciSkeleton = new StaticFibonacciSkeleton(FIBONACCI_ABSOLUTE_OBJECT_REFERENCE);
-        StaticFibonacciProxy fibonacciProxy = new StaticFibonacciProxy(FIBONACCI_ABSOLUTE_OBJECT_REFERENCE, 3);
+        StaticFibonacciProxy fibonacciProxy = new StaticFibonacciProxy(
+                FIBONACCI_ABSOLUTE_OBJECT_REFERENCE,
+                new ProxyOptions(false, 0, 0, true, 3, true)
+        );
 
         System.out.println("Binding the UnicastCalculator skeleton in the Invoker");
         Invoker invoker = Invoker.getInstance();

@@ -23,10 +23,10 @@ public class ClientApplication {
 
         long distributedApplicationStartingTime = System.currentTimeMillis();
 
-        for (int i = 0; i < 45; i++) {
-            int result = staticFibonacci.f(i);
+        for (int i = 0; i < 200; i++) {
+            int result = staticFibonacci.f(39);
             if (showResult) {
-                System.out.println("Fib of " + i + " = " + result);
+                System.out.println("Fib of " + 39 + " = " + result);
             }
             try {
                 Thread.sleep(waitTimeMilliseconds);

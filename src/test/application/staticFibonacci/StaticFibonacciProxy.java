@@ -1,5 +1,6 @@
 package test.application.staticFibonacci;
 
+import esm.distribution.extension.ProxyOptions;
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.invocation.Proxy;
 import esm.util.Tuple;
@@ -13,8 +14,8 @@ public class StaticFibonacciProxy extends Proxy implements StaticFibonacci {
         super(absoluteObjectReference);
     }
 
-    public StaticFibonacciProxy(AbsoluteObjectReference absoluteObjectReference, int numberOfAttempts) {
-        super(absoluteObjectReference, numberOfAttempts);
+    public StaticFibonacciProxy(AbsoluteObjectReference absoluteObjectReference, ProxyOptions proxyOptions) {
+        super(absoluteObjectReference, proxyOptions);
     }
 
     @Override
