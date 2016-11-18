@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
 /**
  * @author Pedro Henrique
  */
-public class ServerApplication {
+public class ServerApplication1 {
 
     private static AbsoluteObjectReference FIBONACCI_ABSOLUTE_OBJECT_REFERENCE;
 
