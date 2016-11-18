@@ -47,6 +47,9 @@ public class MultiRequestInterceptor implements InvocationInterceptor<MethodInvo
     @Override
     public MethodResult intercept(ExcFunction<MethodInvocation, MethodResult> intercepted,
                                   MethodInvocation argument) throws Exception {
+        if (numberOfAttempts == 1) {
+            return intercepted.apply(argument);
+        }
         ArrayList<AbsoluteObjectReference> absoluteObjectReferences = new ArrayList<>();
         for (int i = 0; i < numberOfAttempts; i++) {
             try {

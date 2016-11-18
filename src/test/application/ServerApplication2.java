@@ -28,7 +28,7 @@ public class ServerApplication2 {
     public static void main(String[] args) throws Throwable {
         System.out.println("Creating the StaticFibonacci Skeleton and Proxy");
         StaticFibonacciSkeleton fibonacciSkeleton = new StaticFibonacciSkeleton(FIBONACCI_ABSOLUTE_OBJECT_REFERENCE);
-        StaticFibonacciProxy fibonacciProxy = new StaticFibonacciProxy(FIBONACCI_ABSOLUTE_OBJECT_REFERENCE);
+        StaticFibonacciProxy fibonacciProxy = new StaticFibonacciProxy(FIBONACCI_ABSOLUTE_OBJECT_REFERENCE, 3);
 
         System.out.println("Binding the UnicastCalculator skeleton in the Invoker");
         Invoker invoker = Invoker.getInstance();

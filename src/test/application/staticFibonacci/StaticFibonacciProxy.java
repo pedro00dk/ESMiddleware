@@ -13,6 +13,10 @@ public class StaticFibonacciProxy extends Proxy implements StaticFibonacci {
         super(absoluteObjectReference);
     }
 
+    public StaticFibonacciProxy(AbsoluteObjectReference absoluteObjectReference, int numberOfAttempts) {
+        super(absoluteObjectReference, numberOfAttempts);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public Integer f(Integer x) {

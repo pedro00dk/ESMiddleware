@@ -1,5 +1,6 @@
 package esm.distribution.invocation;
 
+import esm.distribution.extension.MultiRequestInterceptor;
 import esm.distribution.instance.RemoteObject;
 import esm.distribution.management.Requestor;
 import esm.distribution.messaging.presentation.MethodInvocation;
@@ -26,6 +27,11 @@ public abstract class Proxy implements RemoteObject {
     private AbsoluteObjectReference absoluteObjectReference;
 
     /**
+     * The max number of different connection tries in different remote objects.
+     */
+    private Integer numberOfAttempts;
+
+    /**
      * Creates the client proxy with the received {@link AbsoluteObjectReference}.
      *
      * @param absoluteObjectReference the reference to the server skeleton object
@@ -33,6 +39,25 @@ public abstract class Proxy implements RemoteObject {
     public Proxy(AbsoluteObjectReference absoluteObjectReference) {
         this.absoluteObjectReference
                 = Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.");
+        numberOfAttempts = 1;
+    }
+
+    /**
+     * Creates the client proxy with the received {@link AbsoluteObjectReference} and the number of attempts for
+     * connections, if is 1, this proxy will try to send the invocation to the remote object of the received absolute
+     * object reference, if is greater than 1, it will try to connect with different remote objects.
+     *
+     * @param absoluteObjectReference the reference to the server skeleton object
+     * @param numberOfAttempts        the number of connection attempts in different remote objects
+     */
+    public Proxy(AbsoluteObjectReference absoluteObjectReference, Integer numberOfAttempts) {
+        this.absoluteObjectReference
+                = Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.");
+        if (numberOfAttempts < 1 || numberOfAttempts > 100) {
+            throw new IllegalArgumentException("The number of attempts should be between 1 and 100");
+        }
+        this.numberOfAttempts = numberOfAttempts;
+
     }
 
     @Override
@@ -88,7 +113,8 @@ public abstract class Proxy implements RemoteObject {
         MethodInvocation methodInvocation = new MethodInvocation(methodName, methodArguments,
                 requireIndependentInstance, instanceGetterMethodName, instanceGetterMethodArguments, expectResult,
                 absoluteObjectReference);
-        MethodResult methodResult = new Requestor().sendRemoteMethodInvocation(methodInvocation);
+        MethodResult methodResult = new MultiRequestInterceptor(getIdentifier(), numberOfAttempts)
+                .intercept(new Requestor()::sendRemoteMethodInvocation, methodInvocation);
         if (expectResult) {
             if (methodResult.getRemoteMiddlewareException() != null) {
                 methodResult.getRemoteMiddlewareException().printStackTrace();
