@@ -3,8 +3,8 @@ package esm.distribution.extension.exception;
 import esm.distribution.extension.ProxyMultiRequestInterceptor;
 
 /**
- * This exception indicates that a {@link ProxyMultiRequestInterceptor} was failed to send a
- * remote invocation in a maximum number of attempts received.
+ * This exception indicates that a {@link ProxyMultiRequestInterceptor} was failed to send a remote invocation in a
+ * maximum number of attempts received.
  *
  * @author Pedro Henrique
  */

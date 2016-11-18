@@ -68,11 +68,6 @@ public class SkeletonOptions {
         NEVER_BLOCK,
 
         /**
-         * If the Skeleton reaches the max number of connections, the next connections are queued.
-         */
-        QUEUE_MAX_CONN,
-
-        /**
          * If the Skeleton reaches the max number of connections, the next connections are blocked.
          */
         BLOCK_MAX_CONN,

@@ -77,6 +77,15 @@ public abstract class Proxy implements RemoteObject {
     }
 
     /**
+     * Returns the Proxy connection options.
+     *
+     * @return the Proxy options
+     */
+    public ProxyOptions getProxyOptions() {
+        return proxyOptions;
+    }
+
+    /**
      * Invokes remotely a method, if the remote method returns void or if the result is not expected the result of the
      * invocation is null, in the second case, the {@link Exception}s will be ignored too. If the remote method
      * (not the middleware) throws an {@link Exception} this method will throws too with the same message and the

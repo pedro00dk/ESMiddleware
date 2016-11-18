@@ -1,5 +1,6 @@
 package esm.distribution.invocation;
 
+import esm.distribution.extension.SkeletonOptions;
 import esm.distribution.instance.RemoteObject;
 import esm.distribution.management.Invoker;
 import esm.distribution.messaging.presentation.MethodInvocation;
@@ -28,13 +29,31 @@ public abstract class Skeleton implements RemoteObject {
     private AbsoluteObjectReference absoluteObjectReference;
 
     /**
-     * Creates the skeleton with the {@link AbsoluteObjectReference}.
+     * The skeleton blocking options, the options are only used internally by the invoker.
+     */
+    private SkeletonOptions skeletonOptions;
+
+    /**
+     * Creates the skeleton with the {@link AbsoluteObjectReference} and default {@link SkeletonOptions}.
      *
      * @param absoluteObjectReference the absolute object reference of this object
      */
     public Skeleton(AbsoluteObjectReference absoluteObjectReference) {
         this.absoluteObjectReference
                 = Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.");
+        skeletonOptions = new SkeletonOptions();
+    }
+
+    /**
+     * Creates the skeleton with the {@link AbsoluteObjectReference} and default {@link SkeletonOptions}.
+     *
+     * @param absoluteObjectReference the absolute object reference of this object
+     * @param skeletonOptions         the Skeleton blocking options
+     */
+    public Skeleton(AbsoluteObjectReference absoluteObjectReference, SkeletonOptions skeletonOptions) {
+        this.absoluteObjectReference
+                = Objects.requireNonNull(absoluteObjectReference, "The absolute object reference can not be null.");
+        this.skeletonOptions = skeletonOptions;
     }
 
     @Override
@@ -45,6 +64,15 @@ public abstract class Skeleton implements RemoteObject {
     @Override
     public String checkConnection() {
         return "connected";
+    }
+
+    /**
+     * Returns the Skeleton blocking options.
+     *
+     * @return the Skeleton options
+     */
+    public SkeletonOptions getSkeletonOptions() {
+        return skeletonOptions;
     }
 
     /**
