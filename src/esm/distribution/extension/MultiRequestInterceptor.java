@@ -1,9 +1,9 @@
 package esm.distribution.extension;
 
 import esm.common.RegistryManager;
+import esm.distribution.extension.exception.MultiRequestorMaxAttemptsReachedException;
 import esm.distribution.instance.RemoteObject;
 import esm.distribution.invocation.AbsoluteObjectReference;
-import esm.distribution.management.Requestor;
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
 import esm.util.ExcFunction;
@@ -20,11 +20,6 @@ import java.util.Objects;
 public class MultiRequestInterceptor implements InvocationInterceptor<MethodInvocation, MethodResult> {
 
     /**
-     * The {@link Requestor} that will be used to send the invocations.
-     */
-    private Requestor requestor;
-
-    /**
      * The identifier of the remote object.
      */
     private String remoteObjectIdentifier;
@@ -37,12 +32,10 @@ public class MultiRequestInterceptor implements InvocationInterceptor<MethodInvo
     /**
      * Creates the interceptor with the received parameters.
      *
-     * @param requestor              the requestor that will be used to send the invocations.
      * @param remoteObjectIdentifier the identifier of the remote object
      * @param numberOfAttempts       the number of attempts to try another invocations in different objects
      */
-    public MultiRequestInterceptor(Requestor requestor, String remoteObjectIdentifier, int numberOfAttempts) {
-        this.requestor = Objects.requireNonNull(requestor, "The Requestor can not be null.");
+    public MultiRequestInterceptor(String remoteObjectIdentifier, int numberOfAttempts) {
         this.remoteObjectIdentifier = Objects.requireNonNull(remoteObjectIdentifier, "The remote object identifier " +
                 "can not be null.");
         if (numberOfAttempts < 1 || numberOfAttempts > 100) {
@@ -57,7 +50,16 @@ public class MultiRequestInterceptor implements InvocationInterceptor<MethodInvo
         ArrayList<AbsoluteObjectReference> absoluteObjectReferences = new ArrayList<>();
         for (int i = 0; i < numberOfAttempts; i++) {
             try {
-                return requestor.sendRemoteMethodInvocation(argument);
+                MethodResult methodResult = intercepted.apply(argument);
+                if (methodResult.getRemoteMiddlewareException() != null) {
+                    if (methodResult.getRemoteMiddlewareException() instanceof NoSuchMethodException
+                            || methodResult.getRemoteMiddlewareException() instanceof IllegalAccessException) {
+                        // Reflection fails because proxy implementation contains errors
+                        return methodResult;
+                    }
+                    throw methodResult.getRemoteMiddlewareException();
+                }
+                return methodResult;
             } catch (Exception e) {
                 if (i == 0) {
                     ArrayList<RemoteObject> remoteObjects = RegistryManager.lookupAll(remoteObjectIdentifier);
@@ -66,7 +68,8 @@ public class MultiRequestInterceptor implements InvocationInterceptor<MethodInvo
                     }
                 }
                 if (argument.getAbsoluteObjectReferences().containsAll(absoluteObjectReferences)) {
-                    e.printStackTrace();
+                    throw new MultiRequestorMaxAttemptsReachedException("No success in " + (i + 1) + " attempts, no " +
+                            "more RemoteObject options to try a connection.");
                 } else {
                     for (AbsoluteObjectReference absoluteObjectReference : absoluteObjectReferences) {
                         if (!argument.getAbsoluteObjectReferences().contains(absoluteObjectReference)) {
@@ -76,6 +79,7 @@ public class MultiRequestInterceptor implements InvocationInterceptor<MethodInvo
                 }
             }
         }
-        throw new UnsupportedOperationException("The maximum number of attempts reached without invocation success.");
+        throw new MultiRequestorMaxAttemptsReachedException("The maximum number of attempts reached without an " +
+                "invocation success.");
     }
 }
