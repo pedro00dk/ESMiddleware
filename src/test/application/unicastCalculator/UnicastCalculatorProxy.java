@@ -38,22 +38,31 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
     }
 
     @SuppressWarnings("unchecked")
-    private void internalCreateInstance() throws Throwable {
-        instanceIdentifier = (Integer) invokeRemotely(
-                "createInstance", new Tuple[]{},
-                false, null, null,
-                true
-        );
+    private void internalCreateInstance() {
+        try {
+            instanceIdentifier = (Integer) invokeRemotely(
+                    "createInstance", new Tuple[]{},
+                    false, null, null,
+                    true
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         instanceCreated = true;
     }
 
     @SuppressWarnings("unchecked")
-    private void internalDestroyInstance() throws Throwable {
-        invokeRemotely(
-                "destroyInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
-                false, null, null,
-                true
-        );
+    private void internalDestroyInstance() {
+        try {
+            invokeRemotely(
+                    "destroyInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
+                    false, null, null,
+                    true
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        instanceCreated = false;
     }
 
     @Override
@@ -67,8 +76,8 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
             }
             internalDestroyInstance();
             closed = true;
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -87,8 +96,8 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
                     true, "getInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -109,8 +118,8 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
                     true, "getInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -129,8 +138,8 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
                     true, "getInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -150,8 +159,8 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
                     true, "getInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -171,8 +180,8 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
                     true, "getInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -192,8 +201,8 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
                     true, "getInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -213,8 +222,8 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
                     true, "getInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -234,11 +243,11 @@ public class UnicastCalculatorProxy extends Proxy implements UnicastCalculator {
                     true, "getInstance", new Tuple[]{new Tuple(instanceIdentifier, Integer.class)},
                     true
             );
-        } catch (Throwable throwable) {
-            if (throwable instanceof UnsupportedOperationException) {
-                throw (UnsupportedOperationException) throwable;
+        } catch (Exception e) {
+            if (e instanceof UnsupportedOperationException) {
+                throw (UnsupportedOperationException) e;
             }
-            throwable.printStackTrace();
+            e.printStackTrace();
         }
     }
 }

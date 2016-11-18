@@ -28,8 +28,8 @@ public class RequestCalculatorProxy extends Proxy implements RequestCalculator {
                     true, "createInstance", new Tuple[]{},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -44,8 +44,8 @@ public class RequestCalculatorProxy extends Proxy implements RequestCalculator {
                     true, "createInstance", new Tuple[]{},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -58,8 +58,8 @@ public class RequestCalculatorProxy extends Proxy implements RequestCalculator {
                     true, "createInstance", new Tuple[]{},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -73,8 +73,8 @@ public class RequestCalculatorProxy extends Proxy implements RequestCalculator {
                     true, "createInstance", new Tuple[]{},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -88,8 +88,8 @@ public class RequestCalculatorProxy extends Proxy implements RequestCalculator {
                     true, "createInstance", new Tuple[]{},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -103,8 +103,8 @@ public class RequestCalculatorProxy extends Proxy implements RequestCalculator {
                     true, "createInstance", new Tuple[]{},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -118,8 +118,8 @@ public class RequestCalculatorProxy extends Proxy implements RequestCalculator {
                     true, "createInstance", new Tuple[]{},
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -133,11 +133,11 @@ public class RequestCalculatorProxy extends Proxy implements RequestCalculator {
                     true, "createInstance", new Tuple[]{},
                     true
             );
-        } catch (Throwable throwable) {
-            if (throwable instanceof UnsupportedOperationException) {
-                throw (UnsupportedOperationException) throwable;
+        } catch (Exception e) {
+            if (e instanceof UnsupportedOperationException) {
+                throw (UnsupportedOperationException) e;
             }
-            throwable.printStackTrace();
+            e.printStackTrace();
         }
     }
 }

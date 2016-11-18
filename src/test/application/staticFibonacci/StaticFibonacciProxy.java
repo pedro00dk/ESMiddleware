@@ -22,8 +22,8 @@ public class StaticFibonacciProxy extends Proxy implements StaticFibonacci {
                     false, null, null,
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
