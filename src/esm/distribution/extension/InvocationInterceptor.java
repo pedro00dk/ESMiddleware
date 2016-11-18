@@ -1,6 +1,6 @@
 package esm.distribution.extension;
 
-import java.util.function.Function;
+import esm.util.ThrowableFunction;
 
 /**
  * This interface defines the basic method to create method invocation interceptors. This interceptors does not
@@ -11,11 +11,12 @@ import java.util.function.Function;
 public interface InvocationInterceptor<T, U> {
 
     /**
-     * Intercepts the the method invocation. The intercepted method can be called or not in this method.
+     * Intercepts the method invocation. The intercepted method can be called or not in this method.
      *
      * @param intercepted the intercepted method
      * @param argument    the arguments that would be used in the intercepted method
      * @return a result of the same type of the result of the intercepted method
+     * @throws Throwable possible exception or error throw by the intercepted function or by the interception operations
      */
-    U intercept(Function<T, U> intercepted, T argument);
+    U intercept(ThrowableFunction<T, U> intercepted, T argument) throws Throwable;
 }

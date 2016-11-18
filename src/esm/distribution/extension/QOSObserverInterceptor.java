@@ -2,16 +2,16 @@ package esm.distribution.extension;
 
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
+import esm.util.ThrowableFunction;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 /**
  * The QOSObserverInterceptor (QOS -> Quality Of Service) is responsible to get information about a conjunct of
  * invocations in the same {@link esm.distribution.invocation.Skeleton}, each time thats the method
  * {@link esm.distribution.invocation.Skeleton#processRemoteInvocation(MethodInvocation)} is called in the object to
- * check, it should be called using the {@link #intercept(Function, MethodInvocation)} method, this method will get the
- * information about the time to execute the method, the number of invocations done, and the current number of
+ * check, it should be called using the {@link #intercept(ThrowableFunction, MethodInvocation)} method, this method will
+ * get the information about the time to execute the method, the number of invocations done, and the current number of
  * invocations.
  *
  * @author Pedro Henrique
@@ -49,7 +49,8 @@ public class QOSObserverInterceptor implements InvocationInterceptor<MethodInvoc
     }
 
     @Override
-    public MethodResult intercept(Function<MethodInvocation, MethodResult> intercepted, MethodInvocation argument) {
+    public MethodResult intercept(ThrowableFunction<MethodInvocation, MethodResult> intercepted,
+                                  MethodInvocation argument) throws Throwable {
         invocationCount.incrementAndGet();
         currentInvocationCount.incrementAndGet();
         long startTime = System.currentTimeMillis();
@@ -83,7 +84,7 @@ public class QOSObserverInterceptor implements InvocationInterceptor<MethodInvoc
      *
      * @return the average time of the last invocations
      */
-    public long getLastAverageInvocationExecutionTime() {
+    public long getAverageExecutionTime() {
         long averageExecutionTime = 0;
         long receivedInvocations = 0;
         for (long executionTime : executionTimes) {
