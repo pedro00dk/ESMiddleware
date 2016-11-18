@@ -86,8 +86,8 @@ public final class RegistryProxy extends Proxy implements Registry {
                     true
             );
         } catch (Throwable throwable) {
-            if (throwable instanceof IllegalArgumentException) {
-                throw (IllegalArgumentException) throwable;
+            if (throwable instanceof NoSuchElementException) {
+                throw (NoSuchElementException) throwable;
             }
             throwable.printStackTrace();
         }
@@ -104,9 +104,6 @@ public final class RegistryProxy extends Proxy implements Registry {
                     true
             );
         } catch (Throwable throwable) {
-            if (throwable instanceof IllegalArgumentException) {
-                throw (IllegalArgumentException) throwable;
-            }
             throwable.printStackTrace();
         }
         return null;
