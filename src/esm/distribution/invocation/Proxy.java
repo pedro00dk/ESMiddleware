@@ -1,12 +1,12 @@
 package esm.distribution.invocation;
 
+import esm.distribution.extension.MultiRequestInterceptor;
 import esm.distribution.instance.RemoteObject;
 import esm.distribution.management.Requestor;
 import esm.distribution.messaging.presentation.MethodInvocation;
 import esm.distribution.messaging.presentation.MethodResult;
 import esm.util.Tuple;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -86,7 +86,8 @@ public abstract class Proxy implements RemoteObject {
                 requireIndependentInstance, instanceGetterMethodName, instanceGetterMethodArguments, expectResult,
                 absoluteObjectReference);
         Requestor requestor = new Requestor();
-        MethodResult methodResult = requestor.sendRemoteMethodInvocation(methodInvocation);
+        MethodResult methodResult = new MultiRequestInterceptor(requestor, getIdentifier(), 4)
+                .intercept(requestor::sendRemoteMethodInvocation, methodInvocation);
         if (expectResult) {
             if (methodResult.getThrowable() != null) {
                 throw methodResult.getThrowable();
