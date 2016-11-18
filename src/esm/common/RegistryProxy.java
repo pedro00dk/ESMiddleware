@@ -34,11 +34,11 @@ public final class RegistryProxy extends Proxy implements Registry {
                     false, null, null,
                     true
             );
-        } catch (Throwable throwable) {
-            if (throwable instanceof IllegalArgumentException) {
-                throw (IllegalArgumentException) throwable;
+        } catch (Exception e) {
+            if (e instanceof IllegalArgumentException) {
+                throw (IllegalArgumentException) e;
             }
-            throwable.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -51,11 +51,11 @@ public final class RegistryProxy extends Proxy implements Registry {
                     false, null, null,
                     true
             );
-        } catch (Throwable throwable) {
-            if (throwable instanceof IllegalArgumentException) {
-                throw (IllegalArgumentException) throwable;
+        } catch (Exception e) {
+            if (e instanceof IllegalArgumentException) {
+                throw (IllegalArgumentException) e;
             }
-            throwable.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -68,11 +68,11 @@ public final class RegistryProxy extends Proxy implements Registry {
                     false, null, null,
                     true
             );
-        } catch (Throwable throwable) {
-            if (throwable instanceof IllegalArgumentException) {
-                throw (IllegalArgumentException) throwable;
+        } catch (Exception e) {
+            if (e instanceof IllegalArgumentException) {
+                throw (IllegalArgumentException) e;
             }
-            throwable.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -85,11 +85,11 @@ public final class RegistryProxy extends Proxy implements Registry {
                     false, null, null,
                     true
             );
-        } catch (Throwable throwable) {
-            if (throwable instanceof NoSuchElementException) {
-                throw (NoSuchElementException) throwable;
+        } catch (Exception e) {
+            if (e instanceof NoSuchElementException) {
+                throw (NoSuchElementException) e;
             }
-            throwable.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }
@@ -103,8 +103,8 @@ public final class RegistryProxy extends Proxy implements Registry {
                     false, null, null,
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -118,8 +118,8 @@ public final class RegistryProxy extends Proxy implements Registry {
                     false, null, null,
                     true
             );
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
