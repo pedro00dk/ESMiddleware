@@ -1,5 +1,6 @@
 package esm.distribution.management;
 
+import esm.distribution.extension.SkeletonBlockerInterceptor;
 import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.distribution.invocation.Skeleton;
 import esm.distribution.messaging.presentation.MethodInvocation;
@@ -10,6 +11,7 @@ import esm.distribution.serialization.Marshaller;
 import esm.infrastructure.ServerRequestConnector;
 import esm.infrastructure.ServerRequestHandler;
 import esm.infrastructure.impl.tcp.TCPServerRequestConnector;
+import esm.util.Tuple;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -49,7 +51,7 @@ public class Invoker {
     /**
      * The map with the bound {@link Skeleton}s.
      */
-    private Map<AbsoluteObjectReference, Skeleton> boundSkeletons;
+    private Map<AbsoluteObjectReference, Tuple<Skeleton, SkeletonBlockerInterceptor>> boundSkeletons;
 
     /**
      * The map with the {@link ServerRequestConnector}s.
@@ -84,7 +86,13 @@ public class Invoker {
         } else if (boundSkeletons.containsKey(skeleton.getAbsoluteObjectReference())) {
             throw new IllegalArgumentException("A skeleton with the same AbsoluteObjectReference was bound.");
         }
-        boundSkeletons.put(skeleton.getAbsoluteObjectReference(), skeleton);
+        boundSkeletons.put(
+                skeleton.getAbsoluteObjectReference(),
+                new Tuple<>(
+                        skeleton,
+                        new SkeletonBlockerInterceptor(skeleton.getIdentifier(), skeleton.getSkeletonOptions())
+                )
+        );
         int skeletonServerPort = skeleton.getAbsoluteObjectReference().getServerPort();
         if (!serverRequestConnectors.containsKey(skeletonServerPort)) {
             try {
@@ -119,8 +127,8 @@ public class Invoker {
         boundSkeletons.remove(skeleton.getAbsoluteObjectReference());
         int unboundSkeletonServerPort = skeleton.getAbsoluteObjectReference().getServerPort();
         boolean foundSkeletonOnSheSameServerPort = false;
-        for (Skeleton boundSkeleton : boundSkeletons.values()) {
-            if (boundSkeleton.getAbsoluteObjectReference().getServerPort() == unboundSkeletonServerPort) {
+        for (Tuple<Skeleton, SkeletonBlockerInterceptor> boundSkeleton : boundSkeletons.values()) {
+            if (boundSkeleton.getE1().getAbsoluteObjectReference().getServerPort() == unboundSkeletonServerPort) {
                 foundSkeletonOnSheSameServerPort = true;
                 break;
             }
@@ -204,8 +212,10 @@ public class Invoker {
             try {
                 Message requestMessage = (Message) Marshaller.unmarshall(Crypto.decrypt(serverRequestHandler.receive()));
                 MethodInvocation methodInvocation = (MethodInvocation) requestMessage.getBody();
-                Skeleton skeleton = boundSkeletons.get(methodInvocation.getAbsoluteObjectReference());
-                MethodResult methodResult = skeleton.processRemoteInvocation(methodInvocation);
+                Tuple<Skeleton, SkeletonBlockerInterceptor> boundSkeleton
+                        = boundSkeletons.get(methodInvocation.getAbsoluteObjectReference());
+                MethodResult methodResult = boundSkeleton.getE2()
+                        .intercept(boundSkeleton.getE1()::processRemoteInvocation, methodInvocation);
                 if (methodInvocation.isExpectResult()) {
                     Message replyMessage = new Message(methodResult);
                     serverRequestHandler.send(Crypto.encrypt(Marshaller.marshall(replyMessage)));
