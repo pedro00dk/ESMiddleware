@@ -4,6 +4,7 @@ import esm.distribution.invocation.AbsoluteObjectReference;
 import esm.util.Tuple;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * The method result is used to hold the result and a possible {@link Exception} of a remote method messaging or of the
@@ -44,19 +45,27 @@ public class MethodResult implements Serializable {
     private Exception remoteMiddlewareException;
 
     /**
+     * The absolute object reference of the remote object who executed the invocation.
+     */
+    private AbsoluteObjectReference absoluteObjectReference;
+
+    /**
      * Creates a new method result with the remote method messaging result and possibles exceptions.
      *
      * @param methodName                the method name
      * @param result                    the remote method messaging result and result type in a tuple
      * @param remoteMethodException     the possible exception throw in the remote method
      * @param remoteMiddlewareException the possible exception throw in the remote middleware
+     * @param absoluteObjectReference   the absolute object reference of the remote object who executed the invocation
      */
     public MethodResult(String methodName, Tuple<Object, Class> result, Exception remoteMethodException,
-                        Exception remoteMiddlewareException) {
-        this.methodName = methodName;
+                        Exception remoteMiddlewareException, AbsoluteObjectReference absoluteObjectReference) {
+        this.methodName = Objects.requireNonNull(methodName, "The method name can not be null.");
         this.result = result;
         this.remoteMethodException = remoteMethodException;
         this.remoteMiddlewareException = remoteMiddlewareException;
+        this.absoluteObjectReference
+                = Objects.requireNonNull(absoluteObjectReference, "Tha absolute object reference can not be null.");
     }
 
     /**
@@ -103,5 +112,14 @@ public class MethodResult implements Serializable {
      */
     public Exception getRemoteMiddlewareException() {
         return remoteMiddlewareException;
+    }
+
+    /**
+     * Returns the absolute object reference of the remote object who executed the invocation.
+     *
+     * @return the absolute object reference of the remote object
+     */
+    public AbsoluteObjectReference getAbsoluteObjectReference() {
+        return absoluteObjectReference;
     }
 }

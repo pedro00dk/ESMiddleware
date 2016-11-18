@@ -79,9 +79,10 @@ public abstract class Skeleton implements RemoteObject {
                 );
                 executionInstance = instanceGetterMethod.invoke(this, instanceGetterMethodArguments);
             } catch (NoSuchMethodException | IllegalAccessException e) {
-                return new MethodResult(methodInvocation.getMethodName(), null, null, e);
+                return new MethodResult(methodInvocation.getMethodName(), null, null, e, getAbsoluteObjectReference());
             } catch (InvocationTargetException e) {
-                return new MethodResult(methodInvocation.getMethodName(), null, (Exception) e.getCause(), null);
+                return new MethodResult(methodInvocation.getMethodName(), null, (Exception) e.getCause(), null,
+                        getAbsoluteObjectReference());
             }
         }
         Object[] methodArguments = new Object[methodInvocation.getMethodArguments().length];
@@ -97,18 +98,20 @@ public abstract class Skeleton implements RemoteObject {
                     method.getReturnType()
             );
             if (methodInvocation.isExpectResult()) {
-                return new MethodResult(methodInvocation.getMethodName(), result, null, null);
+                return new MethodResult(methodInvocation.getMethodName(), result, null, null,
+                        getAbsoluteObjectReference());
             } else {
                 return null;
             }
         } catch (NoSuchMethodException | IllegalAccessException e) {
             if (methodInvocation.isExpectResult()) {
-                return new MethodResult(methodInvocation.getMethodName(), null, null, e);
+                return new MethodResult(methodInvocation.getMethodName(), null, null, e, getAbsoluteObjectReference());
             }
             return null;
         } catch (InvocationTargetException e) {
             if (methodInvocation.isExpectResult()) {
-                return new MethodResult(methodInvocation.getMethodName(), null, (Exception) e.getCause(), null);
+                return new MethodResult(methodInvocation.getMethodName(), null, (Exception) e.getCause(), null,
+                        getAbsoluteObjectReference());
             }
             return null;
         }
