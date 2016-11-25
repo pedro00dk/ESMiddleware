@@ -45,7 +45,16 @@ public class ProxyMultiRequestInterceptor implements InvocationInterceptor<Metho
     public MethodResult intercept(ExcFunction<MethodInvocation, MethodResult> intercepted,
                                   MethodInvocation argument) throws Exception {
         try {
-            return intercepted.apply(argument);
+            MethodResult methodResult = intercepted.apply(argument);
+            if (methodResult.getRemoteMiddlewareException() != null) {
+                if (methodResult.getRemoteMiddlewareException() instanceof IllegalAccessException
+                        || methodResult.getRemoteMiddlewareException() instanceof NoSuchMethodException) {
+                    // Proxy or skeleton with implementation problems (middleware can not fix it)
+                    return methodResult;
+                }
+                throw methodResult.getRemoteMiddlewareException();
+            }
+            return methodResult;
         } catch (Exception e) {
             if (!proxyOptions.isRetryConnectionOnRegistered() && !proxyOptions.isRetryConnectionOnOther()) {
                 throw new ProxyMultiRequestorException("Failed to connect in the first try (retry connection on " +
@@ -55,7 +64,16 @@ public class ProxyMultiRequestInterceptor implements InvocationInterceptor<Metho
         if (proxyOptions.isRetryConnectionOnRegistered()) {
             for (int i = 0; i < proxyOptions.getAttemptsToTryOnRegistered(); i++) {
                 try {
-                    return intercepted.apply(argument);
+                    MethodResult methodResult = intercepted.apply(argument);
+                    if (methodResult.getRemoteMiddlewareException() != null) {
+                        if (methodResult.getRemoteMiddlewareException() instanceof IllegalAccessException
+                                || methodResult.getRemoteMiddlewareException() instanceof NoSuchMethodException) {
+                            // Proxy or skeleton with implementation problems (middleware can not fix it)
+                            return methodResult;
+                        }
+                        throw methodResult.getRemoteMiddlewareException();
+                    }
+                    return methodResult;
                 } catch (Exception e) {
                     // Delay to reconnect (not after the last connection try)
                     if (i != proxyOptions.getAttemptsToTryOnRegistered() - 1) {
@@ -87,9 +105,17 @@ public class ProxyMultiRequestInterceptor implements InvocationInterceptor<Metho
                             }
                         }
                     }
-                    return intercepted.apply(argument);
+                    MethodResult methodResult = intercepted.apply(argument);
+                    if (methodResult.getRemoteMiddlewareException() != null) {
+                        if (methodResult.getRemoteMiddlewareException() instanceof IllegalAccessException
+                                || methodResult.getRemoteMiddlewareException() instanceof NoSuchMethodException) {
+                            // Proxy or skeleton with implementation problems (middleware can not fix it)
+                            return methodResult;
+                        }
+                        throw methodResult.getRemoteMiddlewareException();
+                    }
+                    return methodResult;
                 } catch (Exception e) {
-
                     // Do not delay to reconnect in different remote objects
                 }
             }
