@@ -6,7 +6,7 @@ import test.application.staticFibonacci.StaticFibonacci;
 /**
  * @author Pedro Henrique
  */
-public class ClientApplication {
+public class ClientApplication3 {
 
     public static void main(String[] args) {
 
@@ -24,9 +24,9 @@ public class ClientApplication {
         long distributedApplicationStartingTime = System.currentTimeMillis();
 
         for (int i = 0; i < 200; i++) {
-            int result = staticFibonacci.f(39);
+            int result = staticFibonacci.f(40);
             if (showResult) {
-                System.out.println("Fib of " + 39 + " = " + result);
+                System.out.println("Fib of " + 40 + " = " + result);
             }
             try {
                 Thread.sleep(waitTimeMilliseconds);

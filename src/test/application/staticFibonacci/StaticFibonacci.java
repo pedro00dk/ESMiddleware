@@ -13,4 +13,6 @@ public interface StaticFibonacci extends StaticRemoteObject {
     }
 
     Integer f(Integer x);
+
+    Integer[] f(Integer[] xs);
 }

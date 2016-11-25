@@ -32,4 +32,18 @@ public class StaticFibonacciProxy extends Proxy implements StaticFibonacci {
         }
         return null;
     }
+
+    @Override
+    public Integer[] f(Integer[] xs) {
+        try {
+            return (Integer[]) invokeRemotely(
+                    "f", new Tuple[]{new Tuple(xs, Integer[].class)},
+                    false, null, null,
+                    true
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
