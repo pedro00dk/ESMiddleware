@@ -44,62 +44,53 @@ public class SkeletonBlockerInterceptor extends QOSObserverInterceptor {
 
     @Override
     public MethodResult intercept(ExcFunction<MethodInvocation, MethodResult> intercepted, MethodInvocation argument) {
+
+        System.out.println(argument.getMethodName() + " called, current: " + getCurrentInvocationCount() +
+                ", total: " + getInvocationCount());
+
+        if (getCurrentInvocationCount() < skeletonOptions.getMaxConnections()) {
+            try {
+                return super.intercept(intercepted, argument);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new Error();
+            }
+        }
+
         switch (skeletonOptions.getBlockMode()) {
             case BLOCK_MAX_CONN:
-                if (getCurrentInvocationCount() > skeletonOptions.getMaxConnections()) {
-                    return new MethodResult(argument.getMethodName(), null, null,
-                            new SkeletonBlockerException("Connection blocked, max concurrent connection reached."),
-                            argument.getAbsoluteObjectReference()
-                    );
-                }
-                try {
-                    return intercepted.apply(argument);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new Error();
-                }
+                System.out.println(argument.getMethodName() + " call blocked");
+                return new MethodResult(argument.getMethodName(), null, null,
+                        new SkeletonBlockerException("Connection blocked, max concurrent connections reached."),
+                        argument.getAbsoluteObjectReference()
+                );
             case FORWARD_MAX_CON:
-                if (getCurrentInvocationCount() > skeletonOptions.getMaxConnections()) {
-                    ArrayList<AbsoluteObjectReference> absoluteObjectReferences = new ArrayList<>();
-                    ArrayList<RemoteObject> remoteObjects = RegistryManager.lookupAll(remoteObjectIdentifier);
-                    for (RemoteObject remoteObject : remoteObjects) {
-                        absoluteObjectReferences.add(remoteObject.getAbsoluteObjectReference());
-                    }
-                    if (argument.getAbsoluteObjectReferences().containsAll(absoluteObjectReferences)) {
-                        return new MethodResult(argument.getMethodName(), null, null,
-                                new SkeletonBlockerException("Failed to forward, no remote objects of the same type " +
-                                        "available."),
-                                argument.getAbsoluteObjectReference()
-                        );
-                    } else {
-                        for (AbsoluteObjectReference absoluteObjectReference : absoluteObjectReferences) {
-                            if (!argument.getAbsoluteObjectReferences().contains(absoluteObjectReference)) {
-                                argument.getAbsoluteObjectReferences().add(absoluteObjectReference);
-                                break;
-                            }
-                        }
-                    }
-                    try {
-                        new Requestor().sendRemoteMethodInvocation(argument);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new Error();
-                    }
-                } else {
-                    try {
-                        return intercepted.apply(argument);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        throw new Error();
+                System.out.println(argument.getMethodName() + " call forwarded");
+                ArrayList<AbsoluteObjectReference> absoluteObjectReferences = new ArrayList<>();
+                ArrayList<RemoteObject> remoteObjects = RegistryManager.lookupAll(remoteObjectIdentifier);
+                for (RemoteObject remoteObject : remoteObjects) {
+                    absoluteObjectReferences.add(remoteObject.getAbsoluteObjectReference());
+                }
+                int currentAORListSize = argument.getAbsoluteObjectReferences().size();
+                for (AbsoluteObjectReference absoluteObjectReference : absoluteObjectReferences) {
+                    if (!argument.getAbsoluteObjectReferences().contains(absoluteObjectReference)) {
+                        argument.getAbsoluteObjectReferences().add(absoluteObjectReference);
+                        break;
                     }
                 }
-            default: // NEVER_BLOCK
+                if (argument.getAbsoluteObjectReferences().size() == currentAORListSize) {
+                    return new MethodResult(argument.getMethodName(), null, null,
+                            new SkeletonBlockerException("Failed to forward, no remote objects of the same type " +
+                                    "available."),
+                            argument.getAbsoluteObjectReference());
+                }
                 try {
-                    return intercepted.apply(argument);
-                } catch (Exception e) {
+                    return new Requestor().sendRemoteMethodInvocation(argument);
+                } catch (IOException e) {
                     e.printStackTrace();
                     throw new Error();
                 }
         }
+        return null;
     }
 }
