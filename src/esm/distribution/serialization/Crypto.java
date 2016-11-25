@@ -4,6 +4,7 @@ import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * @author Pedro Henrique
@@ -35,7 +36,9 @@ public final class Crypto {
         try {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            return cipher.doFinal(data);
+            byte[] cipherText = cipher.doFinal(data);
+            byte[] encryptedBytes = Base64.getEncoder().encode(cipherText);
+            return encryptedBytes;
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
                 | InvalidKeyException e) {
             e.printStackTrace();
@@ -53,7 +56,8 @@ public final class Crypto {
         try {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            return cipher.doFinal(data);
+            byte[] decryptedBytes = Base64.getDecoder().decode(data);
+            return cipher.doFinal(decryptedBytes);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
                 | InvalidKeyException e) {
             e.printStackTrace();
