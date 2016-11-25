@@ -9,6 +9,7 @@ import esm.distribution.messaging.presentation.MethodResult;
 import esm.util.Tuple;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * Base class for proxy objects. This class is created with an {@link AbsoluteObjectReference} of the remote object,
@@ -134,5 +135,46 @@ public abstract class Proxy implements RemoteObject {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Async invoke remotely the received method, this method calls the {@link #invokeRemotely(String, Tuple[], boolean,
+     * String, Tuple[], boolean)} in a exclusive thread and the result is always expected. When the invocation finishes,
+     * the result is processed by the received result consumer, if the invocation throws an exception, it should be
+     * captured by the exception consumer.
+     *
+     * @param methodName                    the method name, can not be null
+     * @param methodArguments               the method arguments, can not be null or contains null class elements,
+     *                                      the class element should be of the type of the equivalent remote method
+     *                                      parameter
+     * @param requireIndependentInstance    if the method should be called in a secondary object
+     * @param instanceGetterMethodName      the method name to access the secondary object from the primary object, can
+     *                                      not be null if requireIndependentInstance is true
+     * @param instanceGetterMethodArguments the instance getter method name arguments, has the same conditions of the
+     *                                      methodArguments argument, can not be null if requireIndependentInstance is
+     *                                      true
+     * @param resultConsumer                the consumer for the invocation result (can ont be null)
+     * @param exceptionConsumer             the consumer for the invocation exception (can ont be null)
+     */
+    @SuppressWarnings("unchecked")
+    protected final void asyncInvokeRemotely(String methodName, Tuple<Object, Class>[] methodArguments,
+                                             boolean requireIndependentInstance, String instanceGetterMethodName,
+                                             Tuple<Object, Class>[] instanceGetterMethodArguments,
+                                             Consumer resultConsumer, Consumer exceptionConsumer) {
+        Objects.requireNonNull(resultConsumer, "The result consumer can not be null.");
+        Objects.requireNonNull(exceptionConsumer, "The exception consumer can not be null.");
+        new Thread(
+                () -> {
+                    try {
+                        Object result = invokeRemotely(
+                                methodName, methodArguments, requireIndependentInstance, instanceGetterMethodName,
+                                instanceGetterMethodArguments, true
+                        );
+                        resultConsumer.accept(result);
+                    } catch (Exception e) {
+                        exceptionConsumer.accept(e);
+                    }
+                }
+        ).start();
     }
 }
